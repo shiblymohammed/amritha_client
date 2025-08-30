@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import LazyImage from '../LazyImage';
 
 // =================================================================
 // == SVG ICONS
@@ -26,26 +27,54 @@ interface Dish {
 
 
 
-const SectionHeader: React.FC<{ subtitle: string; title: string; description: string; }> = ({ subtitle, title, description }) => (
+const SectionHeader: React.FC<{ subtitle: string; title: string; description: string; }> = ({ subtitle, title, description }) => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.3, delayChildren: 0.2 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] },
+    },
+  };
+
+  return (
     <motion.div
-        className="text-center mb-16"
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+      className="text-center mb-16"
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
     >
-        <p className="font-poppins text-sm tracking-[0.2em] text-action-accent uppercase mb-4 font-medium">
-            {subtitle}
-        </p>
-        <h2 className="text-h2 font-playfair text-text-heading mb-6 relative inline-block">
-            {title}
-            <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-action-accent to-transparent"></span>
-        </h2>
-        <p className="text-lg font-cormorant text-text-subtle max-w-3xl mx-auto leading-relaxed mt-8">
-            {description}
-        </p>
+      <motion.p
+        variants={itemVariants}
+        className="font-poppins text-sm tracking-[0.2em] text-action-accent uppercase mb-4 font-medium"
+      >
+        {subtitle}
+      </motion.p>
+      <motion.h2
+        variants={itemVariants}
+        className="text-h2 font-playfair text-text-heading mb-6 relative inline-block"
+      >
+        {title}
+        <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-action-accent to-transparent"></span>
+      </motion.h2>
+      <motion.p
+        variants={itemVariants}
+        className="text-lg font-cormorant text-text-subtle max-w-3xl mx-auto leading-relaxed mt-8"
+      >
+        {description}
+      </motion.p>
     </motion.div>
-);
+  );
+};
 
 // =================================================================
 // == MAIN COMPONENT
@@ -55,11 +84,11 @@ const DiningSection: React.FC = () => {
   const navigate = useNavigate();
 
   const signatureDishes: Dish[] = [
-    { id: 1, name: "Chicken Mushroom Varutharathathu", description: "A classic Keralan curry with toasted coconut.", price: "₹420", image: "./images/Dining/chickenmushroom.jpg" },
-    { id: 2, name: "Niagara Chicken", description: "A fiery and tangy dry chicken preparation.", price: "₹380", image: "./images/Dining/niagrachicken.jpg" },
-    { id: 3, name: "Beef Ularthiyathu", description: "Slow-roasted beef with fried coconut slivers.", price: "₹450", image: "./images/Dining/beefularthiyathu.jpg" },
-    { id: 4, name: "Meen Pollichathu", description: "Spiced fish wrapped in banana leaf and pan-fried.", price: "₹520", image: "./images/Dining/meenpollichathu.jpg" },
-    { id: 5, name: "Prawn Mango Curry", description: "A coastal curry balancing sweet and tangy flavors.", price: "₹480", image: "./images/Dining/prawnmango.jpg" },
+    { id: 1, name: "Chicken Mushroom Varutharathathu", description: "A classic Keralan curry with toasted coconut.", price: "₹420", image: "/images/Dining/chickenmushroom.jpg" },
+    { id: 2, name: "Niagara Chicken", description: "A fiery and tangy dry chicken preparation.", price: "₹380", image: "/images/Dining/niagrachicken.jpg" },
+    { id: 3, name: "Beef Ularthiyathu", description: "Slow-roasted beef with fried coconut slivers.", price: "₹450", image: "/images/Dining/beefularthiyathu.jpg" },
+    { id: 4, name: "Meen Pollichathu", description: "Spiced fish wrapped in banana leaf and pan-fried.", price: "₹520", image: "/images/Dining/meenpollichathu.jpg" },
+    { id: 5, name: "Prawn Mango Curry", description: "A coastal curry balancing sweet and tangy flavors.", price: "₹480", image: "/images/Dining/prawnmango.jpg" },
   ];
 
   useEffect(() => {
@@ -190,11 +219,11 @@ const DiningSection: React.FC = () => {
                       transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
                       className="absolute w-[400px] cursor-pointer"
                       onClick={() => setCurrentIndex(index)}
-                      whileHover={{ scale: position === 'center' ? 1.12 : 1.03 }}
+                      whileHover={{ scale: position === 'center' ? 1.12 : 1.03, y: -4, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
                     >
                                              <div className="bg-background-tertiary rounded-2xl shadow-heritage-lg border border-border-soft p-6 flex flex-col items-center text-center">
                          <div className="w-48 h-48 rounded-full overflow-hidden -mt-12 border-6 border-background shadow-xl">
-                           <img src={dish.image} alt={dish.name} className="w-full h-full object-cover" />
+                           <LazyImage src={dish.image} alt={dish.name} className="w-full h-full object-cover" placeholderClassName="rounded-full" />
                          </div>
                         <h3 className="font-playfair text-xl text-text-heading mt-6">{dish.name}</h3>
                         <p className="font-cormorant text-text-subtle my-4 text-base flex-grow leading-relaxed max-w-sm">{dish.description}</p>
@@ -203,9 +232,9 @@ const DiningSection: React.FC = () => {
                         {/* Order Now Button */}
                         <motion.button
                           onClick={() => handleOrderNow(dish)}
-                          whileHover={{ scale: 1.05 }}
+                          whileHover={{ scale: 1.05, y: -2, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
                           whileTap={{ scale: 0.95 }}
-                          className="mt-3 bg-action-accent hover:bg-action-accent-hover text-text-on-color font-poppins font-semibold px-6 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-sm"
+                          className="mt-3 bg-action-accent hover:bg-action-accent-hover text-text-on-color font-poppins font-semibold px-6 py-2 rounded-lg transition-all duration-300 shadow-lg text-sm"
                         >
                           Order Now
                         </motion.button>
@@ -240,11 +269,11 @@ const DiningSection: React.FC = () => {
                     key={dish.id}
                     className={`absolute ${getCardStyle()} transition-all duration-500 ease-out cursor-pointer`}
                     onClick={() => setCurrentIndex(index)}
-                    whileHover={{ scale: isCurrent ? 1.02 : 0.95 }}
+                    whileHover={{ scale: isCurrent ? 1.02 : 0.95, y: -4, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
                   >
                                          <div className="bg-background-tertiary rounded-2xl shadow-heritage-lg border border-border-soft p-5 flex flex-col items-center text-center w-90 h-90">
                                                <div className="w-60 h-60 rounded-full overflow-hidden -mt-6 border-2 border-background shadow-lg">
-                         <img src={dish.image} alt={dish.name} className="w-full h-full object-cover" />
+                         <LazyImage src={dish.image} alt={dish.name} className="w-full h-full object-cover" placeholderClassName="rounded-full" />
                        </div>
                       <h3 className="font-playfair text-lg text-text-heading mt-4">{dish.name}</h3>
                       <p className="font-cormorant text-text-subtle my-3 text-xs flex-grow leading-relaxed line-clamp-2">{dish.description}</p>
@@ -253,9 +282,9 @@ const DiningSection: React.FC = () => {
                       {/* Order Now Button for Mobile */}
                       <motion.button
                         onClick={() => handleOrderNow(dish)}
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{ scale: 1.05, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
                         whileTap={{ scale: 0.95 }}
-                        className="mt-2 bg-action-accent hover:bg-action-accent-hover text-text-on-color font-poppins font-semibold px-4 py-2 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-xs"
+                        className="mt-2 bg-action-accent hover:bg-action-accent-hover text-text-on-color font-poppins font-semibold px-4 py-2 rounded-lg transition-all duration-300 shadow-md text-xs"
                       >
                         Order Now
                       </motion.button>
@@ -282,9 +311,14 @@ const DiningSection: React.FC = () => {
           </div>
 
           <div className="text-center mt-16">
-            <a href="dining" className="inline-flex items-center gap-3 font-poppins bg-action-primary text-text-on-color px-8 py-4 rounded-lg text-base font-medium transition-all duration-300 transform hover:bg-action-primary-hover hover:shadow-xl active:scale-95 group">
+            <motion.a
+              href="dining"
+              className="inline-flex items-center gap-3 font-poppins bg-action-primary text-text-on-color px-8 py-4 rounded-lg text-base font-medium transition-all duration-300 group"
+              whileHover={{ scale: 1.05, y: -2, boxShadow: '0 0 20px 0 rgba(44, 62, 80, 0.5)' }}
+              whileTap={{ scale: 0.95 }}
+            >
               Explore The Full Menu <ArrowRightIcon />
-            </a>
+            </motion.a>
           </div>
         </div>
       </div>

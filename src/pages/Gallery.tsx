@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X as CloseIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import LazyImage from '../components/LazyImage';
 
 // This is the main gallery page component.
 // It includes a hero section, a filterable image grid, and an expanded modal with navigation.
@@ -162,26 +163,32 @@ const Gallery = () => {
 
       {/* ===== Gallery Grid (Updated) ===== */}
       <div className="w-full px-2 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {filteredImages.map((image, index) => (
-            <div 
-              key={image.id} 
-              className="relative overflow-hidden cursor-pointer rounded-lg border border-border-soft animate-fade-in-up"
-              style={{ animationDelay: `${index * 50}ms`, height: "90vh" }}
-              onClick={() => handleImageClick(image, index)}
-            >
-              <img 
-                src={image.url} 
-                alt={image.alt} 
-                className="w-full h-full object-cover rounded-lg"
-                onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/800x600/DCD7C9/5A594D?text=Image+Unavailable'; }}
-              />
-              {/* Overlay with a transparent gradient and a descriptive text. */}
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
-                <p className="text-text-on-color font-playfair text-xl">{image.alt}</p>
-              </div>
-            </div>
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2" style={{ gridAutoRows: '200px' }}>
+          {filteredImages.map((image, index) => {
+            const rowSpan = index % 3 === 0 ? 'sm:row-span-2' : '';
+            return (
+              <motion.div
+                key={image.id}
+                className={`relative overflow-hidden cursor-pointer rounded-lg border border-border-soft animate-fade-in-up ${rowSpan}`}
+                style={{ animationDelay: `${index * 50}ms` }}
+                onClick={() => handleImageClick(image, index)}
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <LazyImage
+                  src={image.url}
+                  alt={image.alt}
+                  className="w-full h-full object-cover rounded-lg"
+                  placeholderClassName="rounded-lg"
+                  onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/800x600/DCD7C9/5A594D?text=Image+Unavailable'; }}
+                />
+                {/* Overlay with a transparent gradient and a descriptive text. */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                  <p className="text-text-on-color font-playfair text-xl">{image.alt}</p>
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
 
@@ -192,10 +199,11 @@ const Gallery = () => {
           onClick={handleCloseModal}
         >
           <div className="relative w-full max-w-4xl max-h-[90vh] rounded-2xl overflow-hidden shadow-heritage-lg transform animate-fade-in-up" onClick={(e) => e.stopPropagation()}>
-            <img 
+            <LazyImage
               src={selectedImage.url} 
               alt={selectedImage.alt} 
               className="w-full h-full object-contain rounded-2xl"
+              placeholderClassName="rounded-2xl"
             />
             
             {/* Modal Navigation Buttons */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import LazyImage from '../LazyImage';
 
 // Local ArrowRightIcon component
 const ArrowRightIcon = () => (
@@ -11,26 +12,54 @@ const ArrowRightIcon = () => (
 );
 
 // SectionHeader component inline
-const SectionHeader: React.FC<{ subtitle: string; title: string; description: string; }> = ({ subtitle, title, description }) => (
-  <motion.div
-    className="text-center mb-16"
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.3 }}
-    transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
-  >
-    <p className="font-poppins text-sm tracking-[0.2em] text-action-accent uppercase mb-4 font-medium">
-      {subtitle}
-    </p>
-    <h2 className="text-h2 font-playfair text-text-heading mb-6 relative inline-block">
-      {title}
-      <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-action-accent to-transparent"></span>
-    </h2>
-    <p className="text-lg font-cormorant text-text-subtle max-w-3xl mx-auto leading-relaxed mt-8">
-      {description}
-    </p>
-  </motion.div>
-);
+const SectionHeader: React.FC<{ subtitle: string; title: string; description: string; }> = ({ subtitle, title, description }) => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.3, delayChildren: 0.2 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] },
+    },
+  };
+
+  return (
+    <motion.div
+      className="text-center mb-16"
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+    >
+      <motion.p
+        variants={itemVariants}
+        className="font-poppins text-sm tracking-[0.2em] text-action-accent uppercase mb-4 font-medium"
+      >
+        {subtitle}
+      </motion.p>
+      <motion.h2
+        variants={itemVariants}
+        className="text-h2 font-playfair text-text-heading mb-6 relative inline-block"
+      >
+        {title}
+        <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-action-accent to-transparent"></span>
+      </motion.h2>
+      <motion.p
+        variants={itemVariants}
+        className="text-lg font-cormorant text-text-subtle max-w-3xl mx-auto leading-relaxed mt-8"
+      >
+        {description}
+      </motion.p>
+    </motion.div>
+  );
+};
 
 const EventsIntroSection: React.FC = () => {
   const navigate = useNavigate();
@@ -88,7 +117,8 @@ const EventsIntroSection: React.FC = () => {
             {eventCategories.map((category, index) => (
               <motion.div
                 key={category.id}
-                className="group relative bg-background-secondary rounded-2xl lg:rounded-3xl shadow-heritage-lg overflow-hidden hover:shadow-heritage-xl transition-all duration-500 transform hover:-translate-y-2"
+                className="group relative bg-background-secondary rounded-2xl lg:rounded-3xl shadow-heritage-lg overflow-hidden"
+                whileHover={{ y: -8, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
@@ -96,11 +126,10 @@ const EventsIntroSection: React.FC = () => {
               >
                 {/* Image Container */}
                 <div className="relative h-64 lg:h-80 overflow-hidden">
-                  <img 
+                  <LazyImage
                     src={category.image} 
                     alt={category.title} 
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" 
-                    loading="lazy" 
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                   
@@ -125,9 +154,10 @@ const EventsIntroSection: React.FC = () => {
                   </p>
                   
                   {/* Learn More Button */}
-                  <button 
+                  <motion.button
                     onClick={() => navigate(`/events#${category.id}`)}
                     className="inline-flex items-center gap-2 font-poppins text-action-accent hover:text-action-primary font-medium transition-colors duration-300 group/btn"
+                    whileHover={{ scale: 1.05 }}
                   >
                     Learn More
                     <ArrowRightIcon />
@@ -197,19 +227,23 @@ const EventsIntroSection: React.FC = () => {
                 From intimate gatherings to grand celebrations, we have the perfect space for your special occasion.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button 
+                <motion.button
                   onClick={handleExploreEvents}
-                  className="group font-poppins bg-action-primary text-white px-8 py-4 rounded-xl text-base font-semibold transition-all duration-300 transform hover:bg-action-primary-hover hover:shadow-xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-action-accent active:scale-95 flex items-center justify-center"
+                  className="group font-poppins bg-action-primary text-white px-8 py-4 rounded-xl text-base font-semibold transition-all duration-300 flex items-center justify-center"
+                  whileHover={{ scale: 1.05, y: -2, boxShadow: '0 0 20px 0 rgba(44, 62, 80, 0.5)' }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   Explore All Events
                   <ArrowRightIcon />
-                </button>
-                <button 
+                </motion.button>
+                <motion.button
                   onClick={() => navigate('/contact')}
-                  className="font-poppins bg-transparent border-2 border-action-primary text-action-primary px-8 py-4 rounded-xl text-base font-semibold transition-all duration-300 hover:bg-action-primary hover:border-action-primary hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-action-accent active:scale-95"
+                  className="font-poppins bg-transparent border-2 border-action-primary text-action-primary px-8 py-4 rounded-xl text-base font-semibold transition-all duration-300 hover:bg-action-primary hover:border-action-primary hover:text-white hover:shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   Contact Us
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           </div>

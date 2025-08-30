@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useViewportScroll } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import LazyImage from '../LazyImage';
+import useIsMobile from '../../hooks/useIsMobile';
 
 // =================================================================
 // == ICONS (No changes)
@@ -66,6 +68,7 @@ interface Facility {
 // == PARALLAX BACKGROUND COMPONENT
 // =================================================================
 const ParallaxBgImage: React.FC = () => {
+  const isMobile = useIsMobile();
   const { scrollY } = useViewportScroll();
   // Parallax: move background slower than scroll
   const y = useTransform(scrollY, [0, 500], [0, 100]);
@@ -78,7 +81,7 @@ const ParallaxBgImage: React.FC = () => {
     <motion.div
       className="absolute inset-0 w-full h-full z-0"
       style={{
-        y: isClient ? y : 0,
+        y: isClient && !isMobile ? y : 0,
         backgroundImage: "url(/images/Accommodation/room (1).webp)",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -286,20 +289,10 @@ const AccommodationSection: React.FC = () => {
                                 animate={{ scale: 1 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                             >
-                                {/* Enhanced fallback image with loading states */}
-                                <img 
+                                <LazyImage
                                     src={rooms[currentIndex].images[0]} 
                                     alt={rooms[currentIndex].title}
                                     className="w-full h-full object-cover"
-                                    loading="eager"
-                                    onLoad={(e) => {
-                                        e.currentTarget.style.opacity = '1';
-                                    }}
-                                    onError={(e) => {
-                                        console.error('Image failed to load:', rooms[currentIndex].images[0]);
-                                        e.currentTarget.style.display = 'none';
-                                    }}
-                                    style={{ opacity: 0, transition: 'opacity 0.3s ease-in-out' }}
                                 />
                             </motion.div>
                             
@@ -359,10 +352,9 @@ const AccommodationSection: React.FC = () => {
                         delay: 0.2, 
                         ease: [0.25, 0.46, 0.45, 0.94] 
                     }}
-                    className="bg-background-tertiary/90 backdrop-blur-xl border border-border-soft/50 p-6 md:p-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-500"
+                    className="bg-background-tertiary/90 backdrop-blur-xl border border-border-soft/50 p-6 md:p-8 rounded-2xl shadow-2xl hover:shadow-heritage-lg transition-all duration-500"
                     whileHover={{ 
-                        y: -5, 
-                        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" 
+                        y: -4,
                     }}
                 >
                     <motion.p 
@@ -397,8 +389,8 @@ const AccommodationSection: React.FC = () => {
                     >
                         <motion.button 
                             onClick={() => handleCheckAvailability(rooms[currentIndex].id)}
-                            className="font-poppins bg-action-accent hover:bg-action-accent-hover text-white px-6 py-3 rounded-lg text-base font-semibold transition-all duration-300 w-full"
-                            whileHover={{ scale: 1.05, y: -2 }}
+                            className="font-poppins bg-gradient-button hover:brightness-90 text-white px-6 py-3 rounded-lg text-base font-semibold transition-all duration-300 w-full"
+                            whileHover={{ scale: 1.05, y: -2, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
                             whileTap={{ scale: 0.98 }}
                         >
                             Book Now
@@ -445,13 +437,19 @@ const AccommodationSection: React.FC = () => {
                     >
                         <div className="bg-background-tertiary rounded-2xl shadow-heritage-lg border border-border-soft mx-4 h-full flex flex-col">
                             {/* Image Section */}
-                            <div className="h-[400px] w-full rounded-t-2xl overflow-hidden">
-                                <img 
+                            <motion.div
+                              className="h-[400px] w-full rounded-t-2xl overflow-hidden"
+                              whileInView={{ scale: 1.05 }}
+                              transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                              viewport={{ once: true, amount: 0.5 }}
+                            >
+                                <LazyImage
                                     src={rooms[currentIndex].images[0]} 
                                     alt={rooms[currentIndex].title} 
                                     className="w-full h-full object-cover"
+                                    placeholderClassName="rounded-t-2xl"
                                 />
-                      </div>
+                      </motion.div>
 
                             {/* Details Section */}
                             <div className="flex-1 p-6 flex flex-col justify-between">
@@ -470,8 +468,8 @@ const AccommodationSection: React.FC = () => {
                                 <div className="space-y-3">
                                     <motion.button 
                                         onClick={() => handleCheckAvailability(rooms[currentIndex].id)}
-                                        className="w-full font-poppins bg-action-accent hover:bg-action-accent-hover text-white px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300"
-                                        whileHover={{ scale: 1.02 }}
+                                        className="w-full font-poppins bg-gradient-button hover:brightness-90 text-white px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300"
+                                        whileHover={{ scale: 1.02, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
                                         whileTap={{ scale: 0.98 }}
                                     >
                                         Book Now
@@ -593,7 +591,12 @@ const AccommodationSection: React.FC = () => {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 md:gap-6">
             {facilities.map((facility, index) => (
-              <div key={index} className="group relative text-center p-4 bg-background rounded-2xl shadow-heritage hover:shadow-heritage-lg transition-all duration-300 transform hover:-translate-y-2">
+              <motion.div
+                key={index}
+                className="group relative text-center p-4 bg-background rounded-2xl shadow-heritage hover:shadow-heritage-lg transition-all duration-300"
+                whileHover={{ y: -8, rotateX: 5, rotateY: -5 }}
+                transition={{ duration: 0.3 }}
+              >
                 <div className="flex justify-center mb-4">
                   <div className="relative p-3 bg-gradient-to-br from-action-accent/10 to-action-primary/10 rounded-xl">
                     <facility.icon className="w-7 h-7 text-action-accent"/>
@@ -603,7 +606,7 @@ const AccommodationSection: React.FC = () => {
                        {facility.title}
                      </h4>
                  <div className="absolute inset-0 rounded-2xl border border-action-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

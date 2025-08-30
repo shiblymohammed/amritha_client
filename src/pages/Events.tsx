@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Users, MapPin, Phone, Mail, Star, Heart, Camera, Music, Utensils, Gift, Clock, IndianRupee } from 'lucide-react';
-import roomImage from '../../public/images/Accommodation/room (1).webp'
+import LazyImage from '../components/LazyImage';
 
 const Events = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -103,20 +103,21 @@ const Events = () => {
     { icon: Gift, title: 'Custom Packages', desc: 'Tailored solutions and personalized service for every celebration' }
   ];
 
+  const heroImage = '/images/Accommodation/room (1).webp';
+
   return (
     <div className="w-full bg-background">
       {/* Hero Section with Parallax - Clean Visual Only */}
-      <div className="relative h-[70vh] overflow-hidden">
-        <img
-          src={roomImage}
-          alt="Resort view"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          style={{
-            transform: `translateY(-${parallaxOffset}px)`,
-            willChange: 'transform'
-          }}
-        />
-      </div>
+      <LazyImage
+        src={heroImage}
+        alt="Resort view"
+        className="absolute top-0 left-0 w-full h-full object-cover"
+        style={{
+          transform: `translateY(-${parallaxOffset}px)`,
+          willChange: 'transform'
+        }}
+        wrapperClassName="h-[70vh] overflow-hidden"
+      />
 
       {/* Introduction Section */}
       <section className="max-w-6xl mx-auto px-6 md:px-12 pt-20 pb-16">
@@ -149,7 +150,7 @@ const Events = () => {
                   {/* Image Section */}
                   <div className={`relative ${!isEven ? 'lg:col-start-2' : ''}`}>
                     <div className="relative h-96 lg:h-[28rem] rounded-2xl overflow-hidden shadow-heritage group-hover:shadow-heritage-lg transition-all duration-500">
-                      <img 
+                      <LazyImage
                         src={event.image}
                         alt={event.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"

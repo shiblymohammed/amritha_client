@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { menuData, type MenuItem, type MenuCollection, type MenuCategory } from '../components/menuData';
 import { useDailySpecials } from '../hooks/useDailySpecials';
+import LazyImage from '../components/LazyImage';
+import LazyVideo from '../components/LazyVideo';
 
 interface CartItem {
   id: string;
@@ -122,7 +124,7 @@ const Dining: React.FC = () => {
         <div 
           className="absolute inset-0 w-full h-full"
           style={{
-            backgroundImage: 'url(/images/Dining/SAJAN-9.webp )',
+            backgroundImage: 'url(/images/Dining/SAJAN-9.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundAttachment: 'fixed'
@@ -299,12 +301,12 @@ const Dining: React.FC = () => {
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
-                <img
+                <LazyImage
                   src="/images/Dining/SAJAN-4.webp"
                   alt="Kohinoor Restaurant Main Dining"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   onError={(e) => {
-                    e.currentTarget.src = "/images/Dining/SAJAN-9.webp";
+                    (e.target as HTMLImageElement).src = "/images/Dining/SAJAN-9.webp";
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -316,12 +318,12 @@ const Dining: React.FC = () => {
                 whileHover={{ scale: 1.05, rotate: 2 }}
                 transition={{ duration: 0.3 }}
               >
-                <img
+                <LazyImage
                   src="/images/Dining/kitcheninside.jpg"
                   alt="Kitchen"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   onError={(e) => {
-                    e.currentTarget.src = "/images/Dining/gallery/dish1.jpg";
+                    (e.target as HTMLImageElement).src = "/images/Dining/gallery/dish1.jpg";
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -487,7 +489,7 @@ const Dining: React.FC = () => {
                     >
                       <div className="bg-background-tertiary rounded-3xl shadow-heritage-lg border border-border-soft p-8 flex flex-col items-center text-center">
                         <div className="w-64 h-64 rounded-full overflow-hidden -mt-24 border-8 border-background shadow-2xl">
-                          <img src={dish.image} alt={dish.name} className="w-full h-full object-cover" />
+                          <LazyImage src={dish.image} alt={dish.name} className="w-full h-full object-cover" placeholderClassName="rounded-full" />
                         </div>
                         <h3 className="font-playfair text-2xl text-text-heading mt-8">{dish.name}</h3>
                         <p className="font-cormorant text-text-subtle my-4 text-lg flex-grow leading-relaxed max-w-sm">{dish.description}</p>
@@ -530,7 +532,7 @@ const Dining: React.FC = () => {
                     >
                       <div className="bg-background-tertiary rounded-2xl shadow-heritage-lg border border-border-soft p-6 flex flex-col items-center text-center w-72 h-80">
                         <div className="w-48 h-48 rounded-full overflow-hidden -mt-16 border-6 border-background shadow-xl">
-                          <img src={dish.image} alt={dish.name} className="w-full h-full object-cover" />
+                          <LazyImage src={dish.image} alt={dish.name} className="w-full h-full object-cover" placeholderClassName="rounded-full" />
                         </div>
                         <h3 className="font-playfair text-xl text-text-heading mt-6">{dish.name}</h3>
                         <p className="font-cormorant text-text-subtle my-4 text-sm flex-grow leading-relaxed line-clamp-3">{dish.description}</p>
@@ -629,10 +631,11 @@ const Dining: React.FC = () => {
                             <div className="sticky top-40">
                               <div className="bg-background-tertiary rounded-xl overflow-hidden shadow-heritage-lg border border-border-soft">
                                 <div className="aspect-square">
-                                  <img
+                                  <LazyImage
                                     src={category.image}
                                     alt={category.category}
                                     className="w-full h-full object-cover"
+                                    placeholderClassName="rounded-xl"
                                   />
                                 </div>
                                 <div className="p-2 sm:p-3 md:p-4">
@@ -1112,18 +1115,18 @@ const Dining: React.FC = () => {
                   } ${index === 3 ? 'md:col-span-2' : ''}`}
                 >
                   {item.type === 'image' ? (
-                    <img 
+                    <LazyImage
                       src={item.src} 
                       alt={item.alt}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       onError={(e) => {
                         console.warn(`Image failed to load: ${item.src}`);
-                        e.currentTarget.style.display = 'none';
+                        (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
                   ) : (
                     <div className="relative w-full h-full">
-                      <video
+                      <LazyVideo
                         src={item.src}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         autoPlay
@@ -1137,7 +1140,7 @@ const Dining: React.FC = () => {
                           fallbackImg.src = '/images/Dining/hall.jpg';
                           fallbackImg.className = 'w-full h-full object-cover';
                           fallbackImg.alt = 'Dining Hall Fallback';
-                          e.currentTarget.parentNode?.replaceChild(fallbackImg, e.currentTarget);
+                          (e.currentTarget as HTMLVideoElement).parentNode?.replaceChild(fallbackImg, e.currentTarget);
                         }}
                       />
                       

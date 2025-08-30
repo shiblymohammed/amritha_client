@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import LazyImage from '../LazyImage';
 
 // =================================================================
 // == SVG ICONS
@@ -157,15 +158,19 @@ const DestinationSection: React.FC = () => {
                                 transition={{ duration: 0.8, delay: index * 0.1, ease: [0.4, 0, 0.2, 1] }}
                             >
                                 <div className="h-64 overflow-hidden">
-                                    <img src={destination.image} alt={destination.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+                                    <LazyImage src={destination.image} alt={destination.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
                                 </div>
                                 <div className="p-6 flex flex-col flex-grow">
                                     <span className="font-poppins text-sm text-action-accent uppercase">{destination.category}</span>
                                     <h3 className="font-playfair text-h3-sm text-text-heading mt-2">{destination.title}</h3>
                                     <p className="font-cormorant text-text-subtle my-4 flex-grow">{destination.description}</p>
-                                    <button onClick={() => handleConciergeClick(destination)} className="font-poppins text-sm font-medium text-action-primary hover:text-action-primary-hover transition-colors duration-300 group/btn inline-flex items-center self-start">
+                                    <motion.button
+                                      onClick={() => handleConciergeClick(destination)}
+                                      className="font-poppins text-sm font-medium text-action-primary hover:text-action-primary-hover transition-colors duration-300 group/btn inline-flex items-center self-start"
+                                      whileHover={{ scale: 1.05 }}
+                                    >
                                         ✨ Ask Our Concierge <ArrowRightIcon />
-                                    </button>
+                                    </motion.button>
                                 </div>
                             </motion.div>
                         ))}
@@ -189,7 +194,7 @@ const DestinationSection: React.FC = () => {
                                     if (info.offset.x > 100) setMobileIndex(p => (p - 1 + destinations.length) % destinations.length);
                                 }}
                             >
-                                <img src={mobileDestination.image} alt={mobileDestination.title} className="w-full h-full object-cover rounded-2xl shadow-heritage-lg" />
+                                <LazyImage src={mobileDestination.image} alt={mobileDestination.title} className="w-full h-full object-cover rounded-2xl shadow-heritage-lg" placeholderClassName="rounded-2xl" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-2xl"></div>
                                 <div className="absolute bottom-0 left-0 p-8 text-text-on-color">
                                     <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="font-poppins text-sm text-action-accent uppercase">{mobileDestination.category}</motion.p>
@@ -222,14 +227,13 @@ const DestinationSection: React.FC = () => {
                     >
                         <motion.button
                             onClick={() => window.open('/destinations', '_self')}
-                            className="group inline-flex items-center gap-3 font-poppins bg-action-accent hover:bg-action-accent-hover text-white px-10 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:shadow-2xl hover:-translate-y-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-action-accent active:scale-95"
-                            whileHover={{ scale: 1.05, y: -2 }}
+                            className="group inline-flex items-center gap-3 font-poppins bg-action-accent hover:bg-action-accent-hover text-white px-10 py-4 rounded-xl text-lg font-semibold transition-all duration-300"
+                            whileHover={{ scale: 1.05, y: -2, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
                             whileTap={{ scale: 0.95 }}
                         >
                             <span>Explore All Destinations</span>
                             <motion.div
                                 className="transition-transform duration-300 group-hover:translate-x-1"
-                                whileHover={{ x: 4 }}
                             >
                                 <ArrowRightIcon />
                             </motion.div>

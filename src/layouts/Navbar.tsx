@@ -128,7 +128,7 @@ const NavBar: React.FC = () => {
     { name: "Kohinoor Dining", href: "dining", hasHighlight: true },
     { name: "About Us", href: "about" },
     { name: "Contact", href: "contact" },
-    { name: "Events", href: "contact" },
+    { name: "Events", href: "events" },
     { name: "Explore Our Gallery", href: "gallery" },
     { name: "Nearby Locations", href: "destinations" },
 
@@ -198,6 +198,14 @@ const NavBar: React.FC = () => {
                 )}
               </div>
             ))}
+            <motion.a
+              href="/booking"
+              className={`mt-8 font-poppins bg-action-accent text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-500 ease-out ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+              style={{ transitionDelay: `${150 * (navLinks.length + 1)}ms` }}
+              whileHover={{ scale: 1.05 }}
+            >
+              Book Your Stay
+            </motion.a>
           </nav>
 
           <div className={`hidden lg:flex flex-col items-start text-left transition-opacity duration-500 ease-out ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '600ms' }}>

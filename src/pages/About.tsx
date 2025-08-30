@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import LazyImage from '../components/LazyImage';
 
 const About = () => {
+  const navigate = useNavigate();
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -19,17 +23,16 @@ const About = () => {
   return (
     <div className="w-full">
       {/* Clean Parallax Hero Image */}
-      <div className="relative h-[70vh] overflow-hidden">
-        <img
-          src={roomImage}
-          alt="Resort view"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          style={{
-            transform: `translateY(-${parallaxOffset}px)`,
-            willChange: 'transform'
-          }}
-        />
-      </div>
+      <LazyImage
+        src={roomImage}
+        alt="Resort view"
+        className="absolute top-0 left-0 w-full h-full object-cover"
+        style={{
+          transform: `translateY(-${parallaxOffset}px)`,
+          willChange: 'transform'
+        }}
+        wrapperClassName="h-[70vh] overflow-hidden"
+      />
 
       {/* Main Story Section with Title */}
       <section className="max-w-5xl mx-auto px-6 md:px-12 pt-16 pb-20">
@@ -78,10 +81,11 @@ const About = () => {
             </div>
           </div>
           <div className="relative animate-fade-in-up">
-            <img
+            <LazyImage
               src={historyImage}
               alt="Resort history"
               className="w-full h-96 object-cover rounded-lg shadow-heritage-lg"
+              placeholderClassName="rounded-lg"
             />
             <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-action-accent rounded-lg -z-10 opacity-20"></div>
           </div>
@@ -148,10 +152,11 @@ const About = () => {
         <div className="max-w-6xl mx-auto px-6 md:px-12">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="relative order-2 md:order-1">
-              <img
+              <LazyImage
                 src={sustainabilityImage}
                 alt="Kohinoor Restaurant heritage"
                 className="w-full h-96 object-cover rounded-lg shadow-heritage-lg"
+                placeholderClassName="rounded-lg"
               />
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-background-tertiary rounded-lg -z-10"></div>
             </div>
@@ -286,12 +291,20 @@ const About = () => {
             Step into history and experience the nostalgic journey through time at Amritha Heritage
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-text-on-color text-action-primary px-8 py-3 rounded-lg font-poppins font-medium hover:bg-background-secondary hover:text-action-primary-hover transition-all duration-300 shadow-heritage hover:shadow-heritage-lg">
+            <motion.button
+              className="bg-text-on-color text-action-primary px-8 py-3 rounded-lg font-poppins font-medium hover:bg-background-secondary hover:text-action-primary-hover transition-all duration-300 shadow-heritage hover:shadow-heritage-lg"
+              onClick={() => navigate('/booking')}
+              whileHover={{ scale: 1.05 }}
+            >
               Book Heritage Room
-            </button>
-            <button className="border-2 border-text-on-color text-text-on-color px-8 py-3 rounded-lg font-poppins font-medium hover:bg-text-on-color hover:text-action-primary transition-all duration-300">
+            </motion.button>
+            <motion.button
+              className="border-2 border-text-on-color text-text-on-color px-8 py-3 rounded-lg font-poppins font-medium hover:bg-text-on-color hover:text-action-primary transition-all duration-300"
+              onClick={() => navigate('/dining')}
+              whileHover={{ scale: 1.05 }}
+            >
               Visit Kohinoor Restaurant
-            </button>
+            </motion.button>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, Star, MapPin, Clock, Users, Wifi, Coffee, Car, Utensils, Dumbbell } from 'lucide-react';
+import LazyImage from '../components/LazyImage';
 
 interface RoomType {
   id: string;
@@ -174,25 +175,11 @@ const AccommodationPage: React.FC = () => {
                 >
                   {/* Room Image */}
                   <div className="relative h-64 overflow-hidden">
-                    <img 
+                    <LazyImage
                       src={room.image} 
                       alt={room.name}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        const placeholder = document.createElement('div');
-                        placeholder.className = 'w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center';
-                        placeholder.innerHTML = `
-                          <div class="text-center text-gray-500">
-                            <svg class="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
-                              <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
-                            </svg>
-                            <p class="text-sm font-medium">${room.name}</p>
-                          </div>
-                        `;
-                        target.parentNode?.appendChild(placeholder);
-                      }}
+                      placeholderClassName="rounded-t-2xl"
                     />
                     <div className="absolute top-4 right-4 bg-action-accent text-white px-3 py-1 rounded-full text-sm font-poppins font-semibold">
                       {room.price}
@@ -354,25 +341,11 @@ const AccommodationPage: React.FC = () => {
                     index === 1 || index === 3 || index === 5 ? 'md:row-span-2' : ''
                   }`}
                 >
-                  <img 
+                  <LazyImage
                     src={image} 
                     alt={`Accommodation ${index + 1}`}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      const placeholder = document.createElement('div');
-                      placeholder.className = 'w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center';
-                      placeholder.innerHTML = `
-                        <div class="text-center text-gray-500">
-                          <svg class="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
-                          </svg>
-                          <p class="text-sm font-medium">Gallery Image</p>
-                        </div>
-                      `;
-                      target.parentNode?.appendChild(placeholder);
-                    }}
+                    placeholderClassName="rounded-2xl"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-center">
@@ -497,25 +470,11 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({ room, onClose }) =>
           {/* Image Carousel */}
           <div className="relative mb-8">
                          <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden">
-               <img 
+               <LazyImage
                  src={roomImages[currentImageIndex]} 
                  alt={`${room.name} - Image ${currentImageIndex + 1}`}
                  className="w-full h-full object-cover"
-                 onError={(e) => {
-                   const target = e.target as HTMLImageElement;
-                   target.style.display = 'none';
-                   const placeholder = document.createElement('div');
-                   placeholder.className = 'w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center';
-                   placeholder.innerHTML = `
-                     <div class="text-center text-gray-500">
-                       <svg class="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
-                         <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
-                       </svg>
-                       <p class="text-sm font-medium">${room.name}</p>
-                     </div>
-                   `;
-                   target.parentNode?.appendChild(placeholder);
-                 }}
+                 placeholderClassName="rounded-2xl"
                />
               
               {/* Navigation Arrows */}

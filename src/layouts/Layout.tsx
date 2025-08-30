@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { motion } from "framer-motion";
 import NavBar from "./Navbar";
 import Footer from "../pages/Footer";
 import HeritageLoader from "./HeritageLoader";
@@ -26,6 +27,16 @@ const Layout = () => {
             <Outlet />
           </main>
           <Footer />
+          <motion.a
+            href="/booking"
+            className="sm:hidden fixed bottom-4 right-4 bg-action-accent text-white px-6 py-3 rounded-full font-semibold shadow-lg z-50"
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            whileHover={{ scale: 1.1 }}
+          >
+            Book Now
+          </motion.a>
         </div>
       )}
     </>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import useIsMobile from "../../hooks/useIsMobile";
 
 // =================================================================
 // == HELPER COMPONENTS & ICONS
@@ -156,6 +157,7 @@ const Hero: React.FC = () => {
   const [isContentVisible, setContentVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const isMobile = useIsMobile();
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -185,6 +187,22 @@ const Hero: React.FC = () => {
     const timer = setTimeout(() => setContentVisible(true), 500);
     const videoElement = videoRef.current;
     if (videoElement) {
+      const sources = [
+        { src: "/videos/hero2.webm", type: "video/webm" },
+        { src: "/videos/hero2.mp4", type: "video/mp4" }
+      ];
+
+      if (videoElement.children.length === 0) {
+        sources.forEach(sourceInfo => {
+          const source = document.createElement('source');
+          source.src = sourceInfo.src;
+          source.type = sourceInfo.type;
+          videoElement.appendChild(source);
+        });
+      }
+
+      videoElement.load();
+
       videoElement.oncanplaythrough = () => {
         videoElement
           .play()
@@ -194,7 +212,29 @@ const Hero: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const parallaxOffset = scrollY * 0.5;
+  const parallaxOffset = !isMobile ? scrollY * 0.5 : 0;
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.4, 0, 0.2, 1],
+      },
+    },
+  };
 
   return (
     <>
@@ -218,52 +258,50 @@ const Hero: React.FC = () => {
           loop
           playsInline
           poster="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&h=800&fit=crop&q=10"
+          preload="none"
         >
-          <source src="/videos/hero2.webm" type="video/webm" />
-          <source src="/videos/hero2.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/40" />
+        <div className="texture-overlay"></div>
         
         {/* Content */}
-        <div className="relative z-10 text-center text-white px-6">
+        <motion.div
+          className="relative z-10 text-center text-white px-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            variants={itemVariants}
             className="font-poppins text-xs tracking-[0.2em] text-white uppercase mb-4 font-medium"
           >
             Amritha Heritage
           </motion.p>
           <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            variants={itemVariants}
             className="font-cinzel text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight text-white"
           >
             Heritage Reborn,<br />
             <span className="italic">Luxury Renewed</span>
           </motion.h1>
           <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            variants={itemVariants}
             className="font-cormorant text-lg md:text-xl mb-8 max-w-3xl mx-auto text-white"
           >
             Experience the timeless elegance of colonial Travancore in the heart of Thiruvananthapuram
           </motion.p>
           <motion.button
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            variants={itemVariants}
             onClick={() => setIsModalOpen(true)}
-            className="bg-action-accent hover:bg-action-accent-hover text-white font-poppins font-semibold px-6 py-3 rounded-xl text-base transition-all duration-300 transform hover:scale-105"
+            whileHover={{ scale: 1.05, boxShadow: '0 0 20px 0 rgba(212, 162, 118, 0.5)' }}
+            className="bg-action-accent hover:bg-action-accent-hover text-white font-poppins font-semibold px-6 py-3 rounded-xl text-base transition-all duration-300"
           >
             ✨ Plan Your Stay
           </motion.button>
-        </div>
+        </motion.div>
       </section>
     </>
   );
