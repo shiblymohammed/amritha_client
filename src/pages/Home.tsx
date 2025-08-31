@@ -1,6 +1,4 @@
 import Hero from '../components/Home/Hero';
-// import Intro from '../components/Home/Intro';
-// import VideoZoomSection from '../components/Home/VideoZoomSection';
 import DiningSection from '../components/Home/DiningSection'; 
 import ContactSection from '../components/Home/ContactSection';
 import Destinations from '../components/Home/Destinations';
@@ -11,14 +9,12 @@ const Home = () => {
   return (
     <div>
       <Hero />
-      {/* <Intro /> */}
       <StartSection />
-      {/* <VideoZoomSection /> */}
-        <AccommodationSection />
-        <DiningSection />
-        <EventsIntroSection />
-        <Destinations />
-        <ContactSection />  
+      <AccommodationSection />
+      <DiningSection />
+      <EventsIntroSection />
+      <Destinations />
+      <ContactSection />  
         
     </div>
   );

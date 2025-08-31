@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // =================================================================
 // == SVG ICONS
@@ -111,123 +111,18 @@ const allDestinations: Destination[] = [
 ];
 
 // =================================================================
-// == GEMINI API MODAL COMPONENT (Largely unchanged, but still essential)
+// == DESTINATION SECTION COMPONENT
 // =================================================================
-interface ConciergeModalProps {
-    destination: Destination | null;
-    onClose: () => void;
-}
-
-const ConciergeModal = ({ destination, onClose }: ConciergeModalProps) => {
-    const [itinerary, setItinerary] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState('');
-
-    useEffect(() => {
-        const generateItinerary = async () => {
-            if (!destination) return;
-            setIsLoading(true);
-            setError('');
-
-            const prompt = `You are the heritage concierge for Amritha Heritage, a luxury resort in Thiruvananthapuram. A guest is interested in visiting "${destination.title}". 
-            
-            Based on the following details:
-            - Description: ${destination.longDescription}
-            - Concierge Tip: ${destination.conciergeTip}
-
-            Create a brief, elegant half-day itinerary (around 100-150 words) centered on this destination. 
-            
-            - Suggest one or two other nearby points of interest that complement the main destination.
-            - Weave in the provided advice on timing and attire naturally from the destination details.
-            - The tone should be helpful, luxurious, and knowledgeable. Format the output as simple paragraphs with Markdown for bolding key phrases.`;
-
-            try {
-                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                const apiKey = ""; // Handled by environment
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                const result = await response.json();
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (text) {
-                    setItinerary(text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/><br/>'));
-                } else {
-                    throw new Error("Invalid API response.");
-                }
-            } catch (err) {
-                console.error("Itinerary generation failed:", err);
-                setError("Our concierge is currently attending to other guests. Please try again shortly.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        if (destination) {
-            generateItinerary();
-        }
-    }, [destination]);
-    
-    if (!destination) return null;
-
-    return (
-        <motion.div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-        >
-            <motion.div
-                className="bg-background-secondary rounded-2xl shadow-heritage-lg w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
-                initial={{ scale: 0.9, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, y: 20 }}
-                transition={{ ease: "easeInOut", duration: 0.3 }}
-                onClick={e => e.stopPropagation()}
-            >
-                <div className="p-6 md:p-8 border-b border-border-soft">
-                    <p className="font-poppins text-sm text-action-accent uppercase tracking-widest">Heritage Concierge</p>
-                    <h3 className="font-playfair text-h3-sm md:text-h3 text-text-heading mt-1">A Curated Trip to {destination.title}</h3>
-                </div>
-                <div className="p-6 md:p-8 overflow-y-auto">
-                    {isLoading ? (
-                        <div className="flex items-center justify-center gap-4 h-40">
-                            <div className="w-8 h-8 border-2 border-t-transparent border-action-primary rounded-full animate-spin"></div>
-                            <p className="font-cormorant text-lg text-text-subtle">Our concierge is crafting your bespoke journey...</p>
-                        </div>
-                    ) : error ? (
-                        <p className="text-red-600 font-cormorant text-lg">{error}</p>
-                    ) : (
-                        <div className="prose max-w-none font-cormorant text-body text-text leading-relaxed" dangerouslySetInnerHTML={{ __html: itinerary }}></div>
-                    )}
-                </div>
-                 <div className="p-6 md:p-8 border-t border-border-soft bg-background-tertiary/50">
-                    <button onClick={onClose} className="w-full font-poppins text-sm font-medium bg-action-primary text-text-on-color px-6 py-3 rounded-lg hover:bg-action-primary-hover transition-all duration-300 shadow-heritage focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-action-accent">
-                        Close
-                    </button>
-                </div>
-            </motion.div>
-        </motion.div>
-    );
-};
 
 // =================================================================
 // == NEW Destination Section Component
 // =================================================================
 interface DestinationSectionProps {
     destination: Destination;
-    onConciergeClick: (destination: Destination) => void;
     isReversed?: boolean;
 }
 
-const DestinationSection = ({ destination, onConciergeClick, isReversed = false }: DestinationSectionProps) => {
+const DestinationSection = ({ destination, isReversed = false }: DestinationSectionProps) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     useEffect(() => {
@@ -294,11 +189,8 @@ const DestinationSection = ({ destination, onConciergeClick, isReversed = false 
                         <cite className="block font-poppins text-xs text-right mt-2 not-italic">- Your Heritage Concierge</cite>
                     </blockquote>
                     
-                    <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                        <button onClick={() => onConciergeClick(destination)} className="flex-1 font-poppins text-sm font-medium bg-action-primary text-text-on-color px-6 py-3.5 rounded-lg hover:bg-action-primary-hover transition-all duration-300 shadow-heritage inline-flex items-center justify-center group">
-                            ✨ Ask Our Concierge <ArrowRightIcon />
-                        </button>
-                        <a href={`https://www.google.com/maps/search/?api=1&query=${destination.coordinates.lat},${destination.coordinates.lng}`} target="_blank" rel="noopener noreferrer" className="flex-1 font-poppins text-sm font-medium bg-background-tertiary text-text-heading px-6 py-3.5 rounded-lg hover:bg-border-soft transition-all duration-300 shadow-heritage inline-flex items-center justify-center group">
+                    <div className="mt-8">
+                        <a href={`https://www.google.com/maps/search/?api=1&query=${destination.coordinates.lat},${destination.coordinates.lng}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 font-poppins text-sm font-medium bg-action-primary text-text-on-color px-6 py-3.5 rounded-lg hover:bg-action-primary-hover transition-all duration-300 shadow-heritage group">
                             Get Directions <MapPinIcon />
                         </a>
                     </div>
@@ -313,23 +205,9 @@ const DestinationSection = ({ destination, onConciergeClick, isReversed = false 
 // == MAIN PAGE COMPONENT
 // =================================================================
 const DestinationsPage = () => {
-    const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
-
-    const handleConciergeClick = (destination: Destination) => {
-        setSelectedDestination(destination);
-    };
-    
-    const handleCloseModal = () => {
-        setSelectedDestination(null);
-    };
 
     return (
-        <>
-            <AnimatePresence>
-                {selectedDestination && <ConciergeModal destination={selectedDestination} onClose={handleCloseModal} />}
-            </AnimatePresence>
-
-            <main className="bg-background">
+        <main className="bg-background">
                 {/* HERO SECTION */}
                 <section className="relative h-[70vh] overflow-hidden flex items-center justify-center">
                     {/* Background Image */}
@@ -381,7 +259,6 @@ const DestinationsPage = () => {
                         <DestinationSection 
                             key={destination.id} 
                             destination={destination} 
-                            onConciergeClick={handleConciergeClick}
                             isReversed={index % 2 !== 0}
                         />
                     ))}
@@ -434,8 +311,7 @@ const DestinationsPage = () => {
                         </motion.div>
                     </div>
                 </section>
-            </main>
-        </>
+        </main>
     );
 };
 

@@ -1,11 +1,7 @@
 // @/components/Home/Hero.tsx
-import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
-
-// Lazy load the modal: It will only be downloaded when the user needs it.
-const ItineraryModal = lazy(() => import("../ui/ItineraryModal"));
+import React, { useEffect, useRef } from "react";
 
 const Hero: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Optimized scroll effect: No state updates, no re-renders.
@@ -35,17 +31,7 @@ const Hero: React.FC = () => {
   }, []);
 
   return (
-    <>
-      <Suspense fallback={null}>
-        {isModalOpen && (
-          <ItineraryModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-          />
-        )}
-      </Suspense>
-
-      <section
+    <section
         aria-labelledby="hero-title"
         className="relative h-screen overflow-hidden flex items-center justify-center"
       >
@@ -97,15 +83,13 @@ const Hero: React.FC = () => {
           </p>
 
           <button
-            onClick={() => setIsModalOpen(true)}
             className="btn btn-primary text-lg px-8 py-4 shadow-golden-glow hover:shadow-golden-glow-sm transform active:scale-95 hover:scale-105 hover:-translate-y-1 transition-all duration-300 animate-fade-in-up" // <-- Enhanced hover/tap effects
             style={{ animationDelay: "550ms" }}
           >
-            ✨ Plan Your Stay
+            ✨ Explore Heritage
           </button>
         </div>
       </section>
-    </>
   );
 };
 

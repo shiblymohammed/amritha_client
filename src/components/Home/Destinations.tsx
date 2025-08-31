@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
 
 // =================================================================
 // == SVG ICONS
@@ -51,116 +51,12 @@ interface Destination {
 }
 
 // =================================================================
-// == OPTIMIZED CONCIERGE MODAL COMPONENT
+// == DESTINATION CARD COMPONENT
 // =================================================================
-interface ConciergeModalProps {
-  destination: Destination | null;
-  onClose: () => void;
-}
-
-const ConciergeModal = memo<ConciergeModalProps>(({ destination, onClose }) => {
-  const [itinerary, setItinerary] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  const generateItinerary = useCallback(async () => {
-    if (!destination) return;
-    setIsLoading(true);
-    setError('');
-
-    const prompt = `You are the heritage concierge for Amritha Heritage, a luxury resort in Thiruvananthapuram. A guest is interested in visiting "${destination.title}". 
-    
-    Create a brief, elegant half-day itinerary (around 100-120 words) centered on this destination. 
-    
-    - Suggest one or two other nearby points of interest that complement the main destination.
-    - Recommend an ideal time to visit and a brief suggestion on what to wear for comfort and respect (e.g., "light cottons," "modest attire for temples").
-    - The tone should be helpful, luxurious, and knowledgeable. Format the output as simple paragraphs with Markdown for bolding.`;
-
-    try {
-      const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-      const apiKey = ""; // Handled by environment
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) throw new Error(`API Error: ${response.status}`);
-      const result = await response.json();
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (text) {
-        setItinerary(text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>'));
-      } else {
-        throw new Error("Invalid API response.");
-      }
-    } catch (err) {
-      console.error("Itinerary generation failed:", err);
-      setError("Our concierge is currently attending to other guests. Please try again shortly.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [destination]);
-
-  useEffect(() => {
-    generateItinerary();
-  }, [generateItinerary]);
-
-  const handleOverlayClick = useCallback((e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  }, [onClose]);
-
-  return (
-    <div 
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in" 
-      onClick={handleOverlayClick}
-    >
-      <div 
-        className="card-tilt rounded-3xl shadow-golden-glow w-full max-w-lg max-h-[90vh] flex flex-col animate-fade-in-up glassmorphic bg-gradient-to-br from-background/95 via-background-secondary/90 to-background-tertiary/85 backdrop-blur-xl border border-accent-gold/20 transform transition-all duration-300 hover:scale-[1.02]" 
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="p-6 border-b border-accent-gold/20 bg-gradient-to-r from-accent/5 to-accent-gold/5">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent animate-gradient-flow" />
-            <p className="font-poppins text-sm text-accent uppercase tracking-widest font-medium animate-text-shimmer bg-gradient-to-r from-accent via-accent-gold to-accent bg-[length:400%] bg-clip-text text-transparent">Heritage Concierge</p>
-            <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent animate-gradient-flow" />
-          </div>
-          <h3 className="font-playfair text-h3-sm text-foreground animate-float">
-            A Day Trip to {destination?.title}
-            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent mx-auto mt-2 shadow-golden-glow" />
-          </h3>
-        </div>
-        <div className="p-8 overflow-y-auto bg-gradient-to-b from-transparent to-accent/2">
-          {isLoading ? (
-            <div className="flex items-center gap-4 animate-fade-in">
-              <div className="w-6 h-6 border-2 border-t-transparent border-accent rounded-full animate-spin shadow-golden-glow-sm" />
-              <p className="font-cormorant text-foreground-subtle animate-text-shimmer bg-gradient-to-r from-foreground-subtle via-accent to-foreground-subtle bg-[length:400%] bg-clip-text text-transparent">Planning your journey...</p>
-            </div>
-          ) : error ? (
-            <div className="text-center p-4 border border-red-300 rounded-lg bg-red-50/80 backdrop-blur-sm">
-              <p className="text-red-600 font-cormorant animate-fade-in">{error}</p>
-            </div>
-          ) : (
-            <div className="prose max-w-none font-cormorant text-foreground animate-fade-in-up leading-relaxed" dangerouslySetInnerHTML={{ __html: itinerary }} />
-          )}
-        </div>
-      </div>
-    </div>
-  );
-});
-
-ConciergeModal.displayName = 'ConciergeModal';
 
 
 // Optimized Destination Card Component
-const DestinationCard = memo<{ destination: Destination; index: number; onConciergeClick: (destination: Destination) => void }>(({ destination, index, onConciergeClick }) => {
-  const handleConciergeClick = useCallback(() => {
-    onConciergeClick(destination);
-  }, [destination, onConciergeClick]);
+const DestinationCard = memo<{ destination: Destination; index: number }>(({ destination, index }) => {
 
   return (
     <div
@@ -179,15 +75,12 @@ const DestinationCard = memo<{ destination: Destination; index: number; onConcie
         <span className="font-poppins text-sm text-accent uppercase tracking-wide font-medium animate-text-shimmer bg-gradient-to-r from-accent via-accent-gold to-accent bg-[length:400%] bg-clip-text text-transparent">{destination.category}</span>
         <h3 className="font-playfair text-h3-sm text-foreground mt-2 group-hover:text-accent transition-colors duration-300 animate-float">{destination.title}</h3>
         <p className="font-cormorant text-foreground-subtle my-4 flex-grow leading-relaxed animate-fade-in">{destination.description}</p>
-        <button 
-          onClick={handleConciergeClick} 
-          className="btn btn-ghost text-sm px-4 py-2 self-start shadow-soft-sunlight hover:shadow-golden-glow transition-all duration-300 group/btn inline-flex items-center gap-2 hover-lift hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent"
-        >
+        <div className="inline-flex items-center gap-2 text-sm text-accent font-medium">
           <span className="animate-text-shimmer bg-gradient-to-r from-foreground via-accent-gold to-foreground bg-[length:400%] bg-clip-text">
-            ✨ Ask Our Concierge
+            {destination.distance} away
           </span>
           <ArrowRightIcon />
-        </button>
+        </div>
       </div>
     </div>
   );
@@ -199,8 +92,6 @@ DestinationCard.displayName = 'DestinationCard';
 // == MAIN COMPONENT
 // =================================================================
 const DestinationSection: React.FC = () => {
-  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [mobileIndex, setMobileIndex] = useState(0);
 
   // Memoized destinations data
@@ -213,15 +104,6 @@ const DestinationSection: React.FC = () => {
   const mobileDestination = useMemo(() => destinations[mobileIndex], [destinations, mobileIndex]);
 
   // Optimized event handlers
-  const handleConciergeClick = useCallback((destination: Destination) => {
-    setSelectedDestination(destination);
-    setIsModalOpen(true);
-  }, []);
-
-  const handleModalClose = useCallback(() => {
-    setIsModalOpen(false);
-    setSelectedDestination(null);
-  }, []);
 
   const handleMobilePrevious = useCallback(() => {
     setMobileIndex(prev => (prev - 1 + destinations.length) % destinations.length);
@@ -244,9 +126,7 @@ const DestinationSection: React.FC = () => {
   }, []);
 
   return (
-    <>
-      {isModalOpen && <ConciergeModal destination={selectedDestination} onClose={handleModalClose} />}
-      <section className="bg-gradient-to-br from-background via-background-secondary to-background-tertiary py-24 md:py-40 relative overflow-hidden">
+    <section className="bg-gradient-to-br from-background via-background-secondary to-background-tertiary py-24 md:py-40 relative overflow-hidden">
         {/* Optimized Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-accent/5 via-transparent to-accent-gold/3 animate-gradient-flow" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/2" />
@@ -282,7 +162,6 @@ const DestinationSection: React.FC = () => {
                 key={destination.id}
                 destination={destination}
                 index={index}
-                onConciergeClick={handleConciergeClick}
               />
             ))}
           </div>
@@ -298,14 +177,11 @@ const DestinationSection: React.FC = () => {
                 <p className="font-poppins text-sm text-accent-gold uppercase animate-text-shimmer bg-gradient-to-r from-accent-gold via-white to-accent-gold bg-[length:400%] bg-clip-text text-transparent animate-fade-in">{mobileDestination.category}</p>
                 <h3 className="font-playfair text-h3 text-foreground-on-color mt-2 animate-float animate-fade-in-up">{mobileDestination.title}</h3>
                 <p className="font-cormorant text-foreground-on-color/80 mt-4 animate-fade-in">{mobileDestination.description}</p>
-                <button 
-                  onClick={() => handleConciergeClick(mobileDestination)} 
-                  className="btn btn-ghost text-sm px-4 py-2 mt-6 glassmorphic hover:shadow-golden-glow-sm transition-all duration-300 hover-lift hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent"
-                >
+                <div className="inline-flex items-center gap-2 text-sm text-accent-gold font-medium mt-6">
                   <span className="animate-text-shimmer bg-gradient-to-r from-foreground-on-color via-accent-gold to-foreground-on-color bg-[length:400%] bg-clip-text">
-                    ✨ Ask Concierge
+                    {mobileDestination.distance} away
                   </span>
-                </button>
+                </div>
               </div>
             </div>
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
@@ -334,7 +210,6 @@ const DestinationSection: React.FC = () => {
           </div>
         </div>
       </section>
-    </>
   );
 };
 
