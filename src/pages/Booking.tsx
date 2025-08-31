@@ -75,7 +75,7 @@ const whyBookWithUs = [
 // =================================================================
 const RoomCard: React.FC<{ room: Room; onAdd: (roomId: number) => void; onRemove: (roomId: number) => void; quantity: number; isPreSelected?: boolean; }> = ({ room, onAdd, onRemove, quantity, isPreSelected = false }) => (
     <motion.div
-        className={`bg-background-secondary rounded-2xl shadow-heritage border-2 overflow-hidden flex flex-col ${
+        className={`card-interactive border-2 overflow-hidden flex flex-col hover-3d ${
             isPreSelected ? 'border-action-accent bg-action-accent/5' : 'border-border-soft'
         }`}
         initial={{ opacity: 0, y: 50 }}
@@ -96,7 +96,7 @@ const RoomCard: React.FC<{ room: Room; onAdd: (roomId: number) => void; onRemove
             <h3 className="font-playfair text-h3-sm text-text-heading">{room.name}</h3>
             <p className="font-cormorant text-text-subtle mt-2 mb-4 flex-grow">{room.description}</p>
             <div className="flex flex-wrap gap-2 mb-4">
-                {room.amenities.map((amenity) => <span key={amenity} className="text-xs bg-background-tertiary text-text px-3 py-1 rounded-full font-poppins">{amenity}</span>)}
+                                 {room.amenities.map((amenity) => <span key={amenity} className="text-xs bg-background-tertiary text-text px-3 py-1 rounded-full font-poppins hover-lift cursor-default">{amenity}</span>)}
             </div>
             <div className="flex justify-between items-center mt-auto pt-4 border-t border-border-soft">
                 <div>
@@ -104,9 +104,9 @@ const RoomCard: React.FC<{ room: Room; onAdd: (roomId: number) => void; onRemove
                     <p className="text-xs text-text-subtle">per night</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button onClick={() => onRemove(room.id)} className="w-8 h-8 bg-background-tertiary rounded-full flex items-center justify-center text-text-heading hover:bg-border-soft transition-colors disabled:opacity-50" disabled={quantity === 0}><MinusIcon /></button>
-                    <span className="w-10 text-center font-poppins font-medium text-lg">{quantity}</span>
-                    <button onClick={() => onAdd(room.id)} className="w-8 h-8 bg-action-primary text-text-on-color rounded-full flex items-center justify-center hover:bg-action-primary-hover transition-colors"><PlusIcon /></button>
+                                         <button onClick={() => onRemove(room.id)} className="w-8 h-8 bg-background-tertiary rounded-full flex items-center justify-center text-text-heading hover:bg-border-soft transition-colors disabled:opacity-50 hover-bounce" disabled={quantity === 0}><MinusIcon /></button>
+                     <span className="w-10 text-center font-poppins font-medium text-lg animate-scale-breath">{quantity}</span>
+                     <button onClick={() => onAdd(room.id)} className="w-8 h-8 bg-action-primary text-text-on-color rounded-full flex items-center justify-center hover:bg-action-primary-hover transition-colors hover-bounce"><PlusIcon /></button>
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@ const ConfirmationModal: React.FC<{ bookingDetails: GuestInfo & BookingDetails &
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="bg-background-secondary rounded-2xl shadow-heritage-lg w-full max-w-lg p-8 text-center"
+            className="card-tilt w-full max-w-lg p-8 text-center"
         >
             <h2 className="font-playfair text-h2 text-action-accent mb-4">Booking Confirmed!</h2>
             <p className="font-cormorant text-body text-text mb-6">Thank you, {bookingDetails.name}. Your heritage stay is confirmed. A confirmation email has been sent to {bookingDetails.email}.</p>
@@ -331,8 +331,8 @@ export default function BookingPage() {
                     </div>
 
                     {/* Right Column: Booking Summary & Form */}
-                    <div className="lg:col-span-1 sticky top-24">
-                        <div id="booking-summary" className="bg-background-secondary p-6 rounded-2xl shadow-heritage-lg border border-border-soft">
+                                         <div className="lg:col-span-1 sticky top-24">
+                         <div id="booking-summary" className="card-base hover-glow p-6 border border-border-soft">
                             <h3 className="font-playfair text-h3-sm text-text-heading border-b border-border-soft pb-4 mb-4">Your Reservation</h3>
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -370,7 +370,7 @@ export default function BookingPage() {
                                 <button 
                                     type="submit" 
                                     disabled={isSubmitting}
-                                    className="w-full mt-4 bg-action-accent hover:bg-action-accent-hover text-text-on-color font-poppins font-semibold py-3 rounded-lg transition-colors relative overflow-hidden disabled:opacity-70"
+                                    className="w-full mt-4 bg-action-accent hover:bg-action-accent-hover text-text-on-color font-poppins font-semibold py-3 rounded-lg transition-colors relative overflow-hidden disabled:opacity-70 hover-lift"
                                 >
                                     <span className="relative z-10">
                                         {isSubmitting ? 'Processing...' : 'Confirm Booking'}
@@ -387,11 +387,11 @@ export default function BookingPage() {
                         <h2 className="font-playfair text-h2 text-text-heading text-center mb-12">Why Book With Us?</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                             {whyBookWithUs.map((item, index) => (
-                                <motion.div key={index} initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ delay: index * 0.1 }}>
-                                    <div className="bg-action-primary/10 p-4 inline-block rounded-full mb-4"><CheckCircleIcon /></div>
-                                    <h3 className="font-playfair text-h4 text-text-heading">{item.title}</h3>
-                                    <p className="font-cormorant text-text-subtle mt-2">{item.description}</p>
-                                </motion.div>
+                                                                 <motion.div key={index} initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ delay: index * 0.1 }} className="hover-tilt-right">
+                                     <div className="bg-action-primary/10 p-4 inline-block rounded-full mb-4 hover-pulse"><CheckCircleIcon /></div>
+                                     <h3 className="font-playfair text-h4 text-text-heading">{item.title}</h3>
+                                     <p className="font-cormorant text-text-subtle mt-2">{item.description}</p>
+                                 </motion.div>
                             ))}
                         </div>
                     </div>

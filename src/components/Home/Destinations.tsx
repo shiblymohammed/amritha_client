@@ -1,13 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 
 // =================================================================
 // == SVG ICONS
 // =================================================================
+const ArrowRightIcon = memo(() => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
+    aria-hidden="true"
+  >
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </svg>
+));
 
-const ArrowRightIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-);
+ArrowRightIcon.displayName = 'ArrowRightIcon';
+
+// Optimized lazy image component
+const LazyImage = memo(({ src, alt, className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  <img
+    src={src}
+    alt={alt}
+    className={className}
+    loading="lazy"
+    decoding="async"
+    {...props}
+  />
+));
+
+LazyImage.displayName = 'LazyImage';
 
 // =================================================================
 // == DATA STRUCTURES
@@ -22,223 +51,292 @@ interface Destination {
 }
 
 // =================================================================
-// == GEMINI API MODAL COMPONENT
+// == OPTIMIZED CONCIERGE MODAL COMPONENT
 // =================================================================
 interface ConciergeModalProps {
   destination: Destination | null;
   onClose: () => void;
 }
 
-const ConciergeModal = ({ destination, onClose }: ConciergeModalProps) => {
-    const [itinerary, setItinerary] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState('');
+const ConciergeModal = memo<ConciergeModalProps>(({ destination, onClose }) => {
+  const [itinerary, setItinerary] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-    useEffect(() => {
-        const generateItinerary = async () => {
-            if (!destination) return;
-            setIsLoading(true);
-            setError('');
+  const generateItinerary = useCallback(async () => {
+    if (!destination) return;
+    setIsLoading(true);
+    setError('');
 
-            const prompt = `You are the heritage concierge for Amritha Heritage, a luxury resort in Thiruvananthapuram. A guest is interested in visiting "${destination.title}". 
-            
-            Create a brief, elegant half-day itinerary (around 100-120 words) centered on this destination. 
-            
-            - Suggest one or two other nearby points of interest that complement the main destination.
-            - Recommend an ideal time to visit and a brief suggestion on what to wear for comfort and respect (e.g., "light cottons," "modest attire for temples").
-            - The tone should be helpful, luxurious, and knowledgeable. Format the output as simple paragraphs with Markdown for bolding.`;
+    const prompt = `You are the heritage concierge for Amritha Heritage, a luxury resort in Thiruvananthapuram. A guest is interested in visiting "${destination.title}". 
+    
+    Create a brief, elegant half-day itinerary (around 100-120 words) centered on this destination. 
+    
+    - Suggest one or two other nearby points of interest that complement the main destination.
+    - Recommend an ideal time to visit and a brief suggestion on what to wear for comfort and respect (e.g., "light cottons," "modest attire for temples").
+    - The tone should be helpful, luxurious, and knowledgeable. Format the output as simple paragraphs with Markdown for bolding.`;
 
-            try {
-                const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
-                const apiKey = ""; // Handled by environment
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+    try {
+      const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
+      const apiKey = ""; // Handled by environment
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-                if (!response.ok) throw new Error(`API Error: ${response.status}`);
-                const result = await response.json();
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!response.ok) throw new Error(`API Error: ${response.status}`);
+      const result = await response.json();
+      const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
 
-                if (text) {
-                    setItinerary(text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>'));
-                } else {
-                    throw new Error("Invalid API response.");
-                }
-            } catch (err) {
-                console.error("Itinerary generation failed:", err);
-                setError("Our concierge is currently attending to other guests. Please try again shortly.");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        generateItinerary();
-    }, [destination]);
+      if (text) {
+        setItinerary(text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>'));
+      } else {
+        throw new Error("Invalid API response.");
+      }
+    } catch (err) {
+      console.error("Itinerary generation failed:", err);
+      setError("Our concierge is currently attending to other guests. Please try again shortly.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [destination]);
 
-    return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="bg-background-secondary rounded-2xl shadow-heritage-lg w-full max-w-lg max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
-                <div className="p-6 border-b border-border-soft">
-                    <p className="font-poppins text-sm text-action-accent uppercase">Heritage Concierge</p>
-                    <h3 className="font-playfair text-h3-sm text-text-heading">A Day Trip to {destination?.title}</h3>
-                </div>
-                <div className="p-8 overflow-y-auto">
-                    {isLoading ? (
-                        <div className="flex items-center gap-4"><div className="w-6 h-6 border-2 border-t-transparent border-action-primary rounded-full animate-spin"></div><p>Planning your journey...</p></div>
-                    ) : error ? (
-                        <p className="text-red-600">{error}</p>
-                    ) : (
-                        <div className="prose max-w-none font-cormorant text-text" dangerouslySetInnerHTML={{ __html: itinerary }}></div>
-                    )}
-                </div>
-            </div>
+  useEffect(() => {
+    generateItinerary();
+  }, [generateItinerary]);
+
+  const handleOverlayClick = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  }, [onClose]);
+
+  return (
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in" 
+      onClick={handleOverlayClick}
+    >
+      <div 
+        className="card-tilt rounded-3xl shadow-golden-glow w-full max-w-lg max-h-[90vh] flex flex-col animate-fade-in-up glassmorphic bg-gradient-to-br from-background/95 via-background-secondary/90 to-background-tertiary/85 backdrop-blur-xl border border-accent-gold/20 transform transition-all duration-300 hover:scale-[1.02]" 
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="p-6 border-b border-accent-gold/20 bg-gradient-to-r from-accent/5 to-accent-gold/5">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent animate-gradient-flow" />
+            <p className="font-poppins text-sm text-accent uppercase tracking-widest font-medium animate-text-shimmer bg-gradient-to-r from-accent via-accent-gold to-accent bg-[length:400%] bg-clip-text text-transparent">Heritage Concierge</p>
+            <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent animate-gradient-flow" />
+          </div>
+          <h3 className="font-playfair text-h3-sm text-foreground animate-float">
+            A Day Trip to {destination?.title}
+            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent mx-auto mt-2 shadow-golden-glow" />
+          </h3>
         </div>
-    );
-};
+        <div className="p-8 overflow-y-auto bg-gradient-to-b from-transparent to-accent/2">
+          {isLoading ? (
+            <div className="flex items-center gap-4 animate-fade-in">
+              <div className="w-6 h-6 border-2 border-t-transparent border-accent rounded-full animate-spin shadow-golden-glow-sm" />
+              <p className="font-cormorant text-foreground-subtle animate-text-shimmer bg-gradient-to-r from-foreground-subtle via-accent to-foreground-subtle bg-[length:400%] bg-clip-text text-transparent">Planning your journey...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center p-4 border border-red-300 rounded-lg bg-red-50/80 backdrop-blur-sm">
+              <p className="text-red-600 font-cormorant animate-fade-in">{error}</p>
+            </div>
+          ) : (
+            <div className="prose max-w-none font-cormorant text-foreground animate-fade-in-up leading-relaxed" dangerouslySetInnerHTML={{ __html: itinerary }} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+});
 
+ConciergeModal.displayName = 'ConciergeModal';
+
+
+// Optimized Destination Card Component
+const DestinationCard = memo<{ destination: Destination; index: number; onConciergeClick: (destination: Destination) => void }>(({ destination, index, onConciergeClick }) => {
+  const handleConciergeClick = useCallback(() => {
+    onConciergeClick(destination);
+  }, [destination, onConciergeClick]);
+
+  return (
+    <div
+      className="card-interactive group relative overflow-hidden img-overlay flex flex-col hover:shadow-golden-glow animate-fade-in-up hover-3d transform transition-all duration-700 hover:-translate-y-2 hover:scale-[1.03]"
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
+      <div className="h-64 overflow-hidden">
+        <LazyImage 
+          src={destination.image} 
+          alt={destination.title} 
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+      <div className="p-6 flex flex-col flex-grow bg-gradient-to-br from-background/80 via-background-secondary/70 to-background-tertiary/60 backdrop-blur-sm">
+        <span className="font-poppins text-sm text-accent uppercase tracking-wide font-medium animate-text-shimmer bg-gradient-to-r from-accent via-accent-gold to-accent bg-[length:400%] bg-clip-text text-transparent">{destination.category}</span>
+        <h3 className="font-playfair text-h3-sm text-foreground mt-2 group-hover:text-accent transition-colors duration-300 animate-float">{destination.title}</h3>
+        <p className="font-cormorant text-foreground-subtle my-4 flex-grow leading-relaxed animate-fade-in">{destination.description}</p>
+        <button 
+          onClick={handleConciergeClick} 
+          className="btn btn-ghost text-sm px-4 py-2 self-start shadow-soft-sunlight hover:shadow-golden-glow transition-all duration-300 group/btn inline-flex items-center gap-2 hover-lift hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent"
+        >
+          <span className="animate-text-shimmer bg-gradient-to-r from-foreground via-accent-gold to-foreground bg-[length:400%] bg-clip-text">
+            ✨ Ask Our Concierge
+          </span>
+          <ArrowRightIcon />
+        </button>
+      </div>
+    </div>
+  );
+});
+
+DestinationCard.displayName = 'DestinationCard';
 
 // =================================================================
 // == MAIN COMPONENT
 // =================================================================
 const DestinationSection: React.FC = () => {
-    const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [mobileIndex, setMobileIndex] = useState(0);
+  const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mobileIndex, setMobileIndex] = useState(0);
 
-    const destinations: Destination[] = [
-        { id: 1, title: "Shri Padmanabhaswami Temple", description: "A stunning example of Dravidian architecture, this temple is a spiritual heart of the city, dedicated to Vishnu.", image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=1200&h=800&fit=crop&q=80", distance: "5 km", category: "Heritage" },
-        { id: 2, title: "Kovalam Beach", description: "Famous for its three crescent-shaped beaches, offering a serene escape with golden sands and calm waters.", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop&q=80", distance: "16 km", category: "Beach" },
-        { id: 3, title: "Veli Tourist Village", description: "A picturesque spot where the Veli Lake meets the Arabian Sea, offering boating, gardens, and a floating bridge.", image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&h=800&fit=crop&q=80", distance: "8 km", category: "Adventure" },
-    ];
+  // Memoized destinations data
+  const destinations = useMemo<Destination[]>(() => [
+    { id: 1, title: "Shri Padmanabhaswami Temple", description: "A stunning example of Dravidian architecture, this temple is a spiritual heart of the city, dedicated to Vishnu.", image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=1200&h=800&fit=crop&q=80", distance: "5 km", category: "Heritage" },
+    { id: 2, title: "Kovalam Beach", description: "Famous for its three crescent-shaped beaches, offering a serene escape with golden sands and calm waters.", image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop&q=80", distance: "16 km", category: "Beach" },
+    { id: 3, title: "Veli Tourist Village", description: "A picturesque spot where the Veli Lake meets the Arabian Sea, offering boating, gardens, and a floating bridge.", image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&h=800&fit=crop&q=80", distance: "8 km", category: "Adventure" },
+  ], []);
 
-    const mobileDestination = destinations[mobileIndex];
+  const mobileDestination = useMemo(() => destinations[mobileIndex], [destinations, mobileIndex]);
 
-    const handleConciergeClick = (destination: Destination) => {
-        setSelectedDestination(destination);
-        setIsModalOpen(true);
-    };
+  // Optimized event handlers
+  const handleConciergeClick = useCallback((destination: Destination) => {
+    setSelectedDestination(destination);
+    setIsModalOpen(true);
+  }, []);
 
-    return (
-        <>
-            {isModalOpen && <ConciergeModal destination={selectedDestination} onClose={() => setIsModalOpen(false)} />}
-            <section className="bg-background py-24 md:py-40 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/az-subtle.png')] opacity-[0.03]"></div>
-                
-                <div className="container mx-auto px-6 lg:px-8">
-                    <motion.div
-                        className="text-center mb-16 md:mb-24"
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
-                    >
-                        <p className="font-poppins text-sm tracking-[0.2em] text-action-accent uppercase mb-4 font-medium">Explore Our Surroundings</p>
-                        <h2 className="text-h2 font-playfair text-text-heading mb-6 relative inline-block">
-                        Find Us in the Heart of Thiruvananthapuram
-                            <span className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-action-accent to-transparent"></span>
-                        </h2>
-                        <p className="text-lg font-cormorant text-text-subtle max-w-3xl mx-auto leading-relaxed mt-8">
-                             Nestled in Thycaud, Amritha Heritage is just minutes from key cultural and historical landmarks
-                        </p>
-                    </motion.div>
+  const handleModalClose = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedDestination(null);
+  }, []);
 
-                    {/* --- DESKTOP DESTINATIONS GRID --- */}
-                    <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {destinations.map((destination, index) => (
-                            <motion.div
-                                key={destination.id}
-                                className="group relative overflow-hidden rounded-2xl bg-background-secondary shadow-heritage border border-border-soft flex flex-col"
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, amount: 0.3 }}
-                                transition={{ duration: 0.8, delay: index * 0.1, ease: [0.4, 0, 0.2, 1] }}
-                            >
-                                <div className="h-64 overflow-hidden">
-                                    <img src={destination.image} alt={destination.title} className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
-                                </div>
-                                <div className="p-6 flex flex-col flex-grow">
-                                    <span className="font-poppins text-sm text-action-accent uppercase">{destination.category}</span>
-                                    <h3 className="font-playfair text-h3-sm text-text-heading mt-2">{destination.title}</h3>
-                                    <p className="font-cormorant text-text-subtle my-4 flex-grow">{destination.description}</p>
-                                    <button onClick={() => handleConciergeClick(destination)} className="font-poppins text-sm font-medium text-action-primary hover:text-action-primary-hover transition-colors duration-300 group/btn inline-flex items-center self-start">
-                                        ✨ Ask Our Concierge <ArrowRightIcon />
-                                    </button>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
+  const handleMobilePrevious = useCallback(() => {
+    setMobileIndex(prev => (prev - 1 + destinations.length) % destinations.length);
+  }, [destinations.length]);
 
-                    {/* --- MOBILE STORY SLIDER --- */}
-                    <div className="lg:hidden relative h-[80vh] cursor-grab active:cursor-grabbing">
-                        <AnimatePresence>
-                            <motion.div
-                                key={mobileIndex}
-                                className="absolute inset-0 w-full h-full"
-                                initial={{ x: '100%', opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: '-100%', opacity: 0 }}
-                                transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-                                drag="x"
-                                dragConstraints={{ left: 0, right: 0 }}
-                                dragElastic={0.4}
-                                onDragEnd={(_, info) => {
-                                    if (info.offset.x < -100) setMobileIndex(p => (p + 1) % destinations.length);
-                                    if (info.offset.x > 100) setMobileIndex(p => (p - 1 + destinations.length) % destinations.length);
-                                }}
-                            >
-                                <img src={mobileDestination.image} alt={mobileDestination.title} className="w-full h-full object-cover rounded-2xl shadow-heritage-lg" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-2xl"></div>
-                                <div className="absolute bottom-0 left-0 p-8 text-text-on-color">
-                                    <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="font-poppins text-sm text-action-accent uppercase">{mobileDestination.category}</motion.p>
-                                    <motion.h3 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="font-playfair text-h3 text-white mt-2">{mobileDestination.title}</motion.h3>
-                                    <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="font-cormorant text-white/80 mt-4">{mobileDestination.description}</motion.p>
-                                    <motion.button 
-                                        onClick={() => handleConciergeClick(mobileDestination)} 
-                                        className="font-poppins text-sm font-medium bg-white/20 text-white px-4 py-2 rounded-lg mt-6 hover:bg-white/30 transition-colors"
-                                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
-                                    >
-                                        Ask Concierge
-                                    </motion.button>
-                                </div>
-                            </motion.div>
-                        </AnimatePresence>
-                        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-                            {destinations.map((_, i) => (
-                                <div key={i} className={`w-2 h-2 rounded-full transition-colors ${i === mobileIndex ? 'bg-white' : 'bg-white/30'}`}></div>
-                            ))}
-                        </div>
-                    </div>
+  const handleMobileNext = useCallback(() => {
+    setMobileIndex(prev => (prev + 1) % destinations.length);
+  }, [destinations.length]);
 
-                    {/* Explore All Destinations Button */}
-                    <motion.div
-                        className="text-center mt-16"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-                    >
-                        <motion.button
-                            onClick={() => window.open('/destinations', '_self')}
-                            className="group inline-flex items-center gap-3 font-poppins bg-action-accent hover:bg-action-accent-hover text-white px-10 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:shadow-2xl hover:-translate-y-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-action-accent active:scale-95"
-                            whileHover={{ scale: 1.05, y: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <span>Explore All Destinations</span>
-                            <motion.div
-                                className="transition-transform duration-300 group-hover:translate-x-1"
-                                whileHover={{ x: 4 }}
-                            >
-                                <ArrowRightIcon />
-                            </motion.div>
-                        </motion.button>
-                    </motion.div>
-                </div>
-            </section>
-        </>
-    );
+  const handleDragEnd = useCallback((info: { offset: { x: number } }) => {
+    if (info.offset.x < -100) {
+      handleMobileNext();
+    } else if (info.offset.x > 100) {
+      handleMobilePrevious();
+    }
+  }, [handleMobileNext, handleMobilePrevious]);
+
+  const handleExploreAll = useCallback(() => {
+    window.open('/destinations', '_self');
+  }, []);
+
+  return (
+    <>
+      {isModalOpen && <ConciergeModal destination={selectedDestination} onClose={handleModalClose} />}
+      <section className="bg-gradient-to-br from-background via-background-secondary to-background-tertiary py-24 md:py-40 relative overflow-hidden">
+        {/* Optimized Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-accent/5 via-transparent to-accent-gold/3 animate-gradient-flow" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/2" />
+        
+        {/* Simplified Heritage Decorations */}
+        <div className="absolute inset-0 opacity-8 pointer-events-none">
+          <div className="absolute top-32 left-32 w-40 h-40 border border-accent-gold/30 rounded-full animate-float shadow-golden-glow-sm" />
+          <div className="absolute bottom-32 right-32 w-32 h-32 border border-accent/20 rounded-full animate-tilt-3d" />
+          <div className="absolute top-1/3 right-1/5 w-24 h-24 border border-primary/25 rounded-full animate-bounce-gentle" />
+          <div className="absolute bottom-1/4 left-1/6 w-28 h-28 border border-accent-gold/20 rounded-full animate-scale-breath" />
+        </div>
+        
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="text-center mb-16 md:mb-24 animate-fade-in-up">
+            <div className="flex items-center justify-center gap-3 mb-6 animate-fade-in">
+              <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-accent animate-gradient-flow" />
+              <p className="font-poppins text-sm tracking-widest text-accent uppercase font-medium animate-text-shimmer bg-gradient-to-r from-accent via-accent-gold to-accent bg-[length:400%] bg-clip-text text-transparent">Explore Our Surroundings</p>
+              <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-accent animate-gradient-flow" />
+            </div>
+            <h2 className="text-h2 font-playfair text-foreground mb-6 relative inline-block animate-float">
+              Find Us in the Heart of Thiruvananthapuram
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent shadow-golden-glow" />
+            </h2>
+            <p className="text-body font-cormorant text-foreground-subtle max-w-3xl mx-auto leading-relaxed mt-8 animate-fade-in">
+              Nestled in Thycaud, Amritha Heritage is just minutes from key cultural and historical landmarks
+            </p>
+          </div>
+
+          {/* Desktop Destinations Grid */}
+          <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {destinations.map((destination, index) => (
+              <DestinationCard
+                key={destination.id}
+                destination={destination}
+                index={index}
+                onConciergeClick={handleConciergeClick}
+              />
+            ))}
+          </div>
+
+          {/* Mobile Story Slider */}
+          <div className="lg:hidden relative h-[80vh] cursor-grab active:cursor-grabbing">
+            <div
+              className="absolute inset-0 w-full h-full card-interactive overflow-hidden hover-3d transition-all duration-800 ease-out"
+              style={{ backgroundImage: `url(${mobileDestination.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div className="absolute bottom-0 left-0 p-8 text-foreground-on-color bg-gradient-to-t from-black/20 to-transparent backdrop-blur-sm">
+                <p className="font-poppins text-sm text-accent-gold uppercase animate-text-shimmer bg-gradient-to-r from-accent-gold via-white to-accent-gold bg-[length:400%] bg-clip-text text-transparent animate-fade-in">{mobileDestination.category}</p>
+                <h3 className="font-playfair text-h3 text-foreground-on-color mt-2 animate-float animate-fade-in-up">{mobileDestination.title}</h3>
+                <p className="font-cormorant text-foreground-on-color/80 mt-4 animate-fade-in">{mobileDestination.description}</p>
+                <button 
+                  onClick={() => handleConciergeClick(mobileDestination)} 
+                  className="btn btn-ghost text-sm px-4 py-2 mt-6 glassmorphic hover:shadow-golden-glow-sm transition-all duration-300 hover-lift hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                  <span className="animate-text-shimmer bg-gradient-to-r from-foreground-on-color via-accent-gold to-foreground-on-color bg-[length:400%] bg-clip-text">
+                    ✨ Ask Concierge
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3">
+              {destinations.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setMobileIndex(i)}
+                  className={`rounded-full transition-all duration-300 hover-bounce ${i === mobileIndex ? 'w-6 h-2 bg-accent-gold shadow-golden-glow-sm animate-scale-breath' : 'w-2 h-2 bg-white/30 hover:bg-white/50 hover:shadow-golden-glow-sm'}`}
+                  aria-label={`Go to destination ${i + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Explore All Destinations Button */}
+          <div className="text-center mt-16 animate-fade-in-up">
+            <button
+              onClick={handleExploreAll}
+              className="btn btn-primary group text-lg px-10 py-4 shadow-soft-sunlight-lg hover:shadow-golden-glow animate-float transform hover:-translate-y-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent active:scale-95 inline-flex items-center gap-3 transition-all duration-300"
+            >
+              <span className="animate-text-shimmer bg-gradient-to-r from-foreground-on-color via-accent-gold to-foreground-on-color bg-[length:400%] bg-clip-text">
+                Explore All Destinations
+              </span>
+              <ArrowRightIcon />
+            </button>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 };
 
-export default DestinationSection;
+// Memoize the entire component to prevent unnecessary re-renders
+export default memo(DestinationSection);

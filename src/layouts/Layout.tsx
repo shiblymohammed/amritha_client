@@ -4,6 +4,7 @@ import Footer from "../pages/Footer";
 import HeritageLoader from "./HeritageLoader";
 import { usePageLoader } from "../hooks/usePageLoader";
 
+
 const Layout = () => {
   const { isLoading } = usePageLoader({
     initialDelay: 300,

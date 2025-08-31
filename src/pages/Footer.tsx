@@ -11,7 +11,7 @@ const SocialIcon = ({ href, title, children }: SocialIconProps) => (
   <a
     href={href}
     title={title}
-    className="text-text/subtle hover:text-action-accent transition-all duration-300 transform hover:-translate-y-1"
+    className="text-foreground-subtle hover:text-accent-gold transition-all duration-300 transform hover:-translate-y-2 hover:scale-110 shadow-soft-sunlight hover:shadow-golden-glow-sm rounded-full p-3 bg-background-tertiary hover:bg-accent/10 animate-float"
   >
     {children}
   </a>
@@ -45,7 +45,17 @@ function Footer() {
     `transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`;
 
   return (
-    <footer ref={footerRef} className="relative bg-background pt-40 -mt-50">
+    <footer ref={footerRef} className="relative bg-background pt-40 -mt-50 overflow-hidden">
+      {/* Enhanced Decorative Background */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-20 w-64 h-64 bg-accent rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-primary rounded-full mix-blend-multiply filter blur-3xl animate-float"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-accent-gold rounded-full mix-blend-multiply filter blur-2xl animate-float"></div>
+      </div>
+
+      {/* Heritage Pattern Overlay */}
+      <div className="absolute inset-0 heritage-pattern opacity-5"></div>
+
       {/* This SVG creates the wave shape. It's hidden but used by clip-path. */}
       <svg height="0" width="0" className="absolute">
         <defs>
@@ -56,7 +66,7 @@ function Footer() {
       </svg>
       
       <div 
-        className="relative bg-background-secondary pt-32 pb-12 px-8"
+        className="relative bg-background-secondary pt-32 pb-12 px-8 shadow-soft-sunlight-lg"
         style={{ clipPath: 'url(#footer-wave)' }}
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -64,11 +74,11 @@ function Footer() {
           {/* Column 1: Brand & Ethos */}
           <div className="lg:col-span-4" style={{transitionDelay: '100ms'}}>
             <div className={getAnimClass(100)}>
-              <a href="#" className="inline-block mb-6">
-                <span className="text-3xl font-cinzel tracking-widest text-text-heading">AMRITHA HERITAGE</span>
-                <p className="text-sm font-poppins tracking-[0.2em] text-text-subtle">THIRUVANANTHAPURAM</p>
+              <a href="#" className="inline-block mb-6 animate-float">
+                <span className="text-3xl font-cinzel tracking-widest text-foreground animate-text-shimmer bg-gradient-to-r from-foreground via-accent-gold to-foreground bg-400% bg-clip-text">AMRITHA HERITAGE</span>
+                <p className="text-sm font-poppins tracking-wider text-accent uppercase">THIRUVANANTHAPURAM</p>
               </a>
-              <p className="font-cormorant text-body text-text leading-relaxed pr-8">
+              <p className="font-cormorant text-body text-foreground-subtle leading-relaxed pr-8 animate-fade-in">
                 A sanctuary of timeless elegance, preserving the rich colonial history of Thiruvithamkoor for the modern discerning traveler.
               </p>
             </div>
@@ -77,12 +87,14 @@ function Footer() {
           {/* Column 2: Navigation Links */}
           <div className="lg:col-span-2" style={{transitionDelay: '200ms'}}>
             <div className={getAnimClass(200)}>
-              <h3 className="font-playfair text-h4 text-text-heading mb-6">Explore</h3>
+              <h3 className="font-playfair text-h4 text-foreground mb-6 animate-text-shimmer bg-gradient-to-r from-foreground via-accent to-foreground bg-400% bg-clip-text">Explore</h3>
               <ul className="space-y-3">
-                {['Heritage', 'Rooms', 'Dining', 'Gallery'].map(link => (
-                  <li key={link}><a href="#" className="font-poppins text-text-subtle relative after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-action-accent after:bottom-0 after:left-0 after:scale-x-0 after:origin-left hover:after:scale-x-100 after:transition-transform">
-                    {link}
-                  </a></li>
+                {['Heritage', 'Rooms', 'Dining', 'Gallery'].map((link, index) => (
+                  <li key={link} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                    <a href="#" className="font-poppins text-foreground-subtle relative after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-accent-gold after:bottom-0 after:left-0 after:scale-x-0 after:origin-left hover:after:scale-x-100 after:transition-transform hover:text-accent shadow-golden-glow-sm hover:shadow-golden-glow transition-all duration-300">
+                      {link}
+                    </a>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -91,12 +103,14 @@ function Footer() {
           {/* Column 3: Contact & Company Links */}
            <div className="lg:col-span-2" style={{transitionDelay: '300ms'}}>
             <div className={getAnimClass(300)}>
-              <h3 className="font-playfair text-h4 text-text-heading mb-6">Company</h3>
+              <h3 className="font-playfair text-h4 text-foreground mb-6 animate-text-shimmer bg-gradient-to-r from-foreground via-accent to-foreground bg-400% bg-clip-text">Company</h3>
               <ul className="space-y-3">
-                {['About Us', 'Events', 'Contact', 'Location'].map(link => (
-                  <li key={link}><a href="#" className="font-poppins text-text-subtle relative after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-action-accent after:bottom-0 after:left-0 after:scale-x-0 after:origin-left hover:after:scale-x-100 after:transition-transform">
-                    {link}
-                  </a></li>
+                {['About Us', 'Events', 'Contact', 'Location'].map((link, index) => (
+                  <li key={link} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                    <a href="#" className="font-poppins text-foreground-subtle relative after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-accent-gold after:bottom-0 after:left-0 after:scale-x-0 after:origin-left hover:after:scale-x-100 after:transition-transform hover:text-accent shadow-golden-glow-sm hover:shadow-golden-glow transition-all duration-300">
+                      {link}
+                    </a>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -105,17 +119,17 @@ function Footer() {
           {/* Column 4: Newsletter */}
           <div className="lg:col-span-4" style={{transitionDelay: '400ms'}}>
             <div className={getAnimClass(400)}>
-              <h3 className="font-playfair text-h4 text-text-heading mb-6">Stay Connected</h3>
-              <p className="font-cormorant text-text-subtle mb-4">Receive heritage insights and exclusive offers directly to your inbox.</p>
-              <form className="flex">
+              <h3 className="font-playfair text-h4 text-foreground mb-6 animate-text-shimmer bg-gradient-to-r from-foreground via-accent to-foreground bg-400% bg-clip-text">Stay Connected</h3>
+              <p className="font-cormorant text-foreground-subtle mb-4 animate-fade-in">Receive heritage insights and exclusive offers directly to your inbox.</p>
+              <form className="flex animate-fade-in-up">
                 <input
                   type="email"
                   placeholder="Your email address"
-                  className="w-full px-4 py-3 bg-background border border-border-soft rounded-l-md font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-action-accent focus:border-transparent transition"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-l-md font-poppins text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 hover:bg-background-tertiary shadow-soft-sunlight"
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-action-primary hover:bg-action-primary-hover text-text-on-color font-poppins text-sm font-semibold rounded-r-md transition-colors"
+                  className="btn btn-primary px-6 py-3 text-sm font-semibold rounded-r-md rounded-l-none shadow-soft-sunlight hover:shadow-golden-glow-sm animate-float transition-all duration-300"
                 >
                   Join
                 </button>
@@ -125,12 +139,12 @@ function Footer() {
 
         </div>
 
-        {/* Sub-Footer */}
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-border-soft flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs font-poppins text-text-subtle">
+        {/* Enhanced Sub-Footer */}
+        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4 animate-fade-in-up">
+          <p className="text-xs font-poppins text-foreground-subtle animate-text-shimmer bg-gradient-to-r from-foreground-subtle via-accent to-foreground-subtle bg-400% bg-clip-text">
             © 2025 Amritha Heritage. All Rights Reserved.
           </p>
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-4">
             <SocialIcon href="#" title="Facebook"><FacebookIcon /></SocialIcon>
             <SocialIcon href="#" title="Instagram"><InstagramIcon /></SocialIcon>
             <SocialIcon href="#" title="Twitter"><TwitterIcon /></SocialIcon>

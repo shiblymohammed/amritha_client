@@ -118,8 +118,8 @@ const NavBar: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const navBackground = hasScrolled ? 'bg-background-secondary/95 backdrop-blur-sm shadow-heritage-lg' : 'bg-transparent';
-  const hamburgerColor = hasScrolled && !isMenuOpen ? 'bg-text-heading' : 'bg-text-on-color';
+  const navBackground = hasScrolled ? 'glassmorphic shadow-soft-sunlight-lg border-b border-border/20' : 'bg-transparent';
+  const hamburgerColor = hasScrolled && !isMenuOpen ? 'bg-foreground' : 'bg-foreground-on-color';
   const logoSrc = hasScrolled ? '/logoBlack.png' : '/logoWhite.png';
 
   const navLinks = [
@@ -163,10 +163,10 @@ const NavBar: React.FC = () => {
 
             <a 
                 href="booking"
-                className={`font-poppins text-sm font-medium px-6 py-2.5 rounded-lg transition-all duration-300 ease-out whitespace-nowrap hidden sm:block
+                className={`font-poppins text-sm font-medium px-6 py-2.5 rounded-lg transition-all duration-300 ease-out whitespace-nowrap hidden sm:block animate-float
                 ${hasScrolled 
-                    ? 'bg-action-primary text-text-on-color hover:bg-action-primary-hover shadow-md' 
-                    : 'bg-transparent border-2 border-text-on-color/70 text-text-on-color hover:bg-text-on-color hover:text-text-heading'
+                    ? 'btn btn-primary shadow-soft-sunlight hover:shadow-golden-glow-sm transform hover:scale-105' 
+                    : 'btn btn-ghost text-foreground-on-color border-foreground-on-color/70 hover:bg-foreground-on-color hover:text-foreground shadow-golden-glow-sm'
                 }`}
             >
               Book Now
