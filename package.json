@@ -5,15 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
+    "build:deploy": "vite build --config vite.config.simple.ts",
+    "build:minimal": "vite build --config vite.config.minimal.ts",
     "build:no-ts": "vite build",
-    "build:analyze": "ANALYZE=true npm run build",
-    "build:preview": "npm run build && npm run preview",
-    "analyze": "npm run build:analyze && open dist/stats.html",
-    "build:preview": "npm run build && npm run preview",
-    "lint": "eslint .",
     "preview": "vite preview",
-    "optimize-images": "imagemin public/images/* --out-dir=public/images/optimized --plugin=webp --plugin=mozjpeg --plugin=pngquant"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
