@@ -1,98 +1,84 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { rooms, facilities } from './AccommodationData';
 import type { Room } from './AccommodationData';
+import LazyImage from '../ui/LazyImage';
 
-// Reusable hook for detecting when an element is in view
-const useInView = (options?: IntersectionObserverInit) => {
-    const ref = useRef<HTMLDivElement>(null);
-    const [isInView, setIsInView] = useState(false);
-    useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                setIsInView(true);
-                observer.unobserve(entry.target);
-            }
-        }, options);
-        const currentRef = ref.current;
-        if (currentRef) observer.observe(currentRef);
-        return () => { if (currentRef) observer.unobserve(currentRef); };
-    }, [options]);
-    return [ref, isInView] as const;
-};
-
-// Reusable animated div for scroll-triggered animations
-const AnimatedDiv = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string, delay?: number }) => {
-    const [ref, isInView] = useInView({ threshold: 0.1 });
-    return (
-        <div
-            ref={ref}
-            className={`${className} transition-all duration-1000 ease-out`}
-            style={{
-                opacity: isInView ? 1 : 0,
-                transform: isInView ? 'translateY(0)' : 'translateY(48px)',
-                transitionDelay: `${delay}ms`
-            }}
-        >
-            {children}
-        </div>
-    );
-};
-
-// Component for the main section header
-const SectionHeader = ({ title, subtitle, children }: { title: string, subtitle: string, children: React.ReactNode }) => (
-    <AnimatedDiv className="text-center mb-16 md:mb-24">
-        <div className="flex items-center justify-center gap-3 mb-6">
+// Optimized SectionHeader component with memo
+const SectionHeader = memo<{ title: string; subtitle: string; children: React.ReactNode }>(({ title, subtitle, children }) => (
+    <div className="text-center mb-16 md:mb-24 animate-fadeInUp">
+        <div className="flex items-center justify-center gap-3 mb-6 animate-fadeIn">
             <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-accent" />
-            <p className="font-poppins text-sm tracking-widest text-accent uppercase font-medium animate-text-shimmer bg-gradient-to-r from-accent via-accent-gold to-accent bg-400% bg-clip-text text-transparent">{subtitle}</p>
+            <p className="font-poppins text-sm tracking-widest text-accent uppercase font-medium animate-text-shimmer">{subtitle}</p>
             <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-accent" />
         </div>
-        <h2 className="text-h2 font-playfair text-foreground mb-6 relative animate-float">
-            {title}
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent shadow-golden-glow" />
-        </h2>
-        <p className="text-body font-cormorant text-foreground-subtle max-w-3xl mx-auto leading-relaxed">
+        <div className="opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards]">
+            <h2 className="text-h2 font-playfair text-foreground mb-6 relative animate-float">
+                {title}
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent shadow-golden-glow" />
+            </h2>
+        </div>
+        <p className="text-body font-cormorant text-foreground-subtle max-w-3xl mx-auto leading-relaxed opacity-0 animate-[fadeInUp_0.8s_ease-out_0.5s_forwards]">
             {children}
         </p>
-    </AnimatedDiv>
-);
+    </div>
+));
 
-// A single slide component that contains both image and details
-const RoomSlide = ({ room, isCurrent }: { room: Room; isCurrent: boolean; }) => {
+SectionHeader.displayName = 'SectionHeader';
+
+// Optimized RoomSlide component with memo and useCallback
+const RoomSlide = memo<{ room: Room; isCurrent: boolean }>(({ room, isCurrent }) => {
     const navigate = useNavigate();
+    
+    const handleBooking = useCallback(() => {
+        navigate(`/booking?room=${room.id}`);
+    }, [navigate, room.id]);
+    
+    const handleViewDetails = useCallback(() => {
+        navigate(`/accommodation-details/${room.id}`);
+    }, [navigate, room.id]);
+    
     return (
         <div className="flex-shrink-0 w-full lg:grid lg:grid-cols-12 lg:items-center lg:gap-8">
             {/* Image */}
             <div className="lg:col-span-8 xl:col-span-7 aspect-[16/10] card-base shadow-soft-sunlight-lg overflow-hidden">
-                <img
+                <LazyImage
                     src={room.images[0]}
                     alt={room.title}
-                    width="1280"
-                    height="800"
-                    loading={isCurrent ? 'eager' : 'lazy'}
-                    className="w-full h-full object-cover"
+                    width={1280}
+                    height={800}
+                    priority={isCurrent}
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    quality={80}
                 />
             </div>
             {/* Details Card */}
             <div className="lg:col-span-6 xl:col-span-5 lg:-ml-32 xl:-ml-40 z-10 mt-4 lg:mt-0">
-                <div className="card-base p-6 lg:p-8 shadow-soft-sunlight-lg transition-all duration-300 hover:shadow-golden-glow hover:-translate-y-1 glassmorphic">
-                    <p className="font-poppins text-sm tracking-widest text-accent uppercase mb-3 animate-text-shimmer bg-gradient-to-r from-accent via-accent-gold to-accent bg-400% bg-clip-text text-transparent">{room.type}</p>
-                    <h3 className="font-playfair text-2xl lg:text-4xl mb-3 leading-tight text-foreground animate-float">{room.title}</h3>
+                <div className="card-base p-6 lg:p-8 shadow-soft-sunlight-lg transition-all duration-200 hover:shadow-golden-glow hover:-translate-y-1 glassmorphic">
+                    <p className="font-poppins text-sm tracking-widest text-accent uppercase mb-3 animate-text-shimmer">{room.type}</p>
+                    <div className="animate-float" style={{ animationDelay: '0.2s' }}>
+                        <h3 className="font-playfair text-2xl lg:text-4xl mb-3 leading-tight text-foreground">{room.title}</h3>
+                    </div>
                     <p className="font-cormorant text-base lg:text-lg mb-6 text-foreground-subtle h-24">{room.description}</p>
                     <div className="flex flex-col sm:flex-row gap-3">
-                        <button onClick={() => navigate(`/booking?room=${room.id}`)} className="btn btn-primary w-full text-base py-3 transition-transform hover:scale-105 active:scale-95">Book Now</button>
-                        <button onClick={() => navigate(`/accommodation-details/${room.id}`)} className="btn btn-ghost w-full text-base py-3 transition-transform hover:scale-105 active:scale-95">View Details</button>
+                        <button onClick={handleBooking} className="btn btn-primary w-full text-base py-3 transition-transform hover:scale-105 active:scale-95">Book Now</button>
+                        <button onClick={handleViewDetails} className="btn btn-ghost w-full text-base py-3 transition-transform hover:scale-105 active:scale-95">View Details</button>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
+});
+
+RoomSlide.displayName = 'RoomSlide';
 
 // The main slider component
-const RoomSlider = ({ rooms }: { rooms: Room[] }) => {
-    const navigate = useNavigate();
-    const [currentIndex, setCurrentIndex] = useState(0);
+const RoomSlider = ({ rooms, currentIndex, setCurrentIndex, onNavigateToAccommodation }: { 
+    rooms: Room[]; 
+    currentIndex: number; 
+    setCurrentIndex: (index: number) => void;
+    onNavigateToAccommodation: () => void;
+}) => {
     const [isDragging, setIsDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState(0);
     const dragStartRef = useRef(0);
@@ -164,7 +150,7 @@ const RoomSlider = ({ rooms }: { rooms: Room[] }) => {
 
             {/* Navigation Controls */}
             <div className="flex justify-center items-center gap-4 mt-8">
-                <button onClick={() => paginate(currentIndex - 1)} aria-label="Previous room" className="btn btn-ghost p-3 rounded-full transition-transform hover:scale-110 active:scale-95">&#10094;</button>
+                <button onClick={() => paginate(currentIndex - 1)} aria-label="Previous room" className="btn btn-ghost p-3 rounded-full transition-transform hover:scale-105 active:scale-95">&#10094;</button>
                 <div className="flex justify-center gap-3">
                     {rooms.map((_, index) => (
                         <button
@@ -175,63 +161,69 @@ const RoomSlider = ({ rooms }: { rooms: Room[] }) => {
                         />
                     ))}
                 </div>
-                <button onClick={() => paginate(currentIndex + 1)} aria-label="Next room" className="btn btn-ghost p-3 rounded-full transition-transform hover:scale-110 active:scale-95">&#10095;</button>
+                <button onClick={() => paginate(currentIndex + 1)} aria-label="Next room" className="btn btn-ghost p-3 rounded-full transition-transform hover:scale-105 active:scale-95">&#10095;</button>
             </div>
 
-            <AnimatedDiv className="text-center mt-12">
-                <button onClick={() => navigate('/accommodation')} className="btn btn-primary group inline-flex items-center gap-3 text-lg px-10 py-4 shadow-soft-sunlight-lg transition-transform hover:-translate-y-1 active:scale-95 animate-float">
-                    <span>Explore All Rooms</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 transition-transform group-hover:translate-x-1"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </button>
-            </AnimatedDiv>
+            <div className="text-center mt-12 animate-fadeInUp">
+                <div className="animate-float" style={{ animationDelay: '0.8s' }}>
+                    <button onClick={onNavigateToAccommodation} className="btn btn-primary group inline-flex items-center gap-3 text-lg px-10 py-4 shadow-soft-sunlight-lg transition-transform hover:-translate-y-1 active:scale-95">
+                        <span>Explore All Rooms</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 transition-transform group-hover:translate-x-1"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };
 
-// Component for the facilities grid with animations restored
-const FacilitiesGrid = () => (
+// Optimized FacilitiesGrid component with memo
+const FacilitiesGrid = memo(() => (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4 md:gap-6">
       {facilities.map((facility, index) => (
-        <AnimatedDiv
+        <div
           key={facility.title}
-          delay={index * 100}
-          className="card-base group relative text-center p-4 transition-all duration-300 transform hover:-translate-y-2"
+          className="card-base group relative text-center p-4 transition-all duration-200 hover:-translate-y-1 animate-fadeInUp animate-float"
+          style={{ 
+            animationDelay: `${index * 100}ms`,
+            '--float-delay': `${index * 0.2}s`
+          } as React.CSSProperties & { '--float-delay': string }}
         >
           <div className="flex justify-center mb-4">
-             {/* Floating animation restored */}
-            <div className="relative p-3 bg-gradient-to-br from-accent/10 to-primary/10 rounded-xl shadow-soft-sunlight group-hover:shadow-golden-glow transition-all duration-300 animate-float">
-               {/* Hover pulse animation restored */}
+            <div className="relative p-3 bg-gradient-to-br from-accent/10 to-primary/10 rounded-xl shadow-soft-sunlight group-hover:shadow-golden-glow transition-all duration-300">
               <facility.icon className="w-7 h-7 text-accent group-hover:text-accent-gold transition-colors duration-300 group-hover:animate-pulse"/>
             </div>
           </div>
-          {/* Shimmer effect restored */}
-          <h4 className="text-sm md:text-base font-playfair text-foreground group-hover:text-accent transition-colors duration-300 animate-text-shimmer bg-gradient-to-r from-foreground via-accent to-foreground bg-400% bg-clip-text">
+          <h4 className="text-sm md:text-base font-playfair text-foreground group-hover:text-accent transition-colors duration-300 animate-text-shimmer">
             {facility.title}
           </h4>
-           {/* Breathing glow border on hover restored */}
           <div className="absolute inset-0 rounded-2xl border border-accent-gold/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-golden-glow animate-scale-breath"></div>
-        </AnimatedDiv>
+        </div>
       ))}
     </div>
-);
+));
+
+FacilitiesGrid.displayName = 'FacilitiesGrid';
 
 
 const AccommodationSection: React.FC = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate();
+    
+
+    
+    // Optimized navigation handler
+    const handleNavigateToAccommodation = useCallback(() => {
+        navigate('/accommodation');
+    }, [navigate]);
+
     return (
-        <section className="relative overflow-hidden bg-background">
-            {/* Pure CSS Parallax background */}
-            <div
-                className="absolute inset-0 z-0 h-screen bg-cover bg-center bg-no-repeat bg-fixed"
-                style={{ backgroundImage: "url(/images/Accommodation/room (1).webp)" }}
-                aria-hidden="true"
-            />
-            <div className="absolute inset-0 z-0 bg-background/50 backdrop-blur-sm" aria-hidden="true" />
+        <section className="relative overflow-hidden bg-gradient-to-br from-background via-background-secondary to-background-tertiary">
             
             <div className="relative z-10 container mx-auto px-4 sm:px-6 py-16 md:py-24 lg:py-32">
                 <SectionHeader title="Stay in Colonial Elegance" subtitle="Heritage Stays">
                     Our rooms are more than places to sleep—they are a journey into history, uniquely designed with period furniture and modern amenities.
                 </SectionHeader>
-                <RoomSlider rooms={rooms} />
+                <RoomSlider rooms={rooms} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} onNavigateToAccommodation={handleNavigateToAccommodation} />
             </div>
 
             <div className="relative z-10 bg-background-secondary py-16 md:py-24 lg:py-32">
@@ -246,4 +238,5 @@ const AccommodationSection: React.FC = () => {
     );
 };
 
-export default AccommodationSection;
+// Memoize the entire component to prevent unnecessary re-renders
+export default memo(AccommodationSection);

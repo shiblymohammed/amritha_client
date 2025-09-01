@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LazyImage from '../ui/LazyImage';
 
 // =================================================================
 // == SVG ICONS
@@ -36,37 +37,25 @@ interface Dish {
   image: string;
 }
 
-// Optimized lazy image component
-const LazyImage = memo(({ src, alt, className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => (
-  <img
-    src={src}
-    alt={alt}
-    className={className}
-    loading="lazy"
-    decoding="async"
-    {...props}
-  />
-));
+// Remove the local LazyImage - using the optimized one from ui folder
 
-LazyImage.displayName = 'LazyImage';
-
-// Optimized section header with CSS animations
+// Optimized SectionHeader component with memo and proper animations
 const SectionHeader = memo<{ subtitle: string; title: string; description: string; }>(({ subtitle, title, description }) => (
-  <div className="text-center mb-16 animate-fade-in-up">
-    <div className="flex items-center justify-center gap-3 mb-6 animate-fade-in">
-      <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-accent animate-gradient-flow" />
-      <p className="font-poppins text-sm tracking-widest text-accent uppercase font-medium animate-text-shimmer bg-gradient-to-r from-accent via-accent-gold to-accent bg-[length:400%] bg-clip-text text-transparent">
+     <div className="text-center mb-16">
+     <div className="flex items-center justify-center gap-3 mb-6">
+      <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+      <p className="font-poppins text-sm tracking-widest text-accent uppercase font-medium animate-text-shimmer">
         {subtitle}
       </p>
-      <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-accent animate-gradient-flow" />
+      <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-accent" />
     </div>
-    <h2 className="text-h2 font-playfair text-foreground mb-6 relative inline-block animate-float">
-      {title}
-      <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent shadow-golden-glow" />
-    </h2>
-    <p className="text-body font-cormorant text-foreground-subtle max-w-3xl mx-auto leading-relaxed mt-8 animate-fade-in">
-      {description}
-    </p>
+             <h2 className="text-h2 font-playfair text-foreground mb-6 relative inline-block animate-float">
+           {title}
+           <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent shadow-golden-glow" />
+         </h2>
+         <p className="text-body font-cormorant text-foreground-subtle max-w-3xl mx-auto leading-relaxed mt-8">
+       {description}
+     </p>
   </div>
 ));
 
@@ -100,29 +89,30 @@ const DishCard = memo<DishCardProps>(({ dish, onClick, onOrderNow, className = '
       className={`${className} ${isCenter ? 'hover:scale-[1.12]' : 'hover:scale-105'} transition-transform duration-300`}
       onClick={onClick}
     >
-      <div className={`bg-gradient-to-br from-background via-background-secondary to-background-tertiary border border-border/20 rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-500 backdrop-blur-sm ${cardSize}`}>
-        <div className={`${imageSize} rounded-full overflow-hidden ${imageMargin} border-4 border-accent-gold/20 shadow-golden-glow animate-float`}>
-          <LazyImage 
+      <div className={`bg-gradient-to-br from-background via-background-secondary to-background-tertiary border border-border/20 rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-300 backdrop-blur-sm ${cardSize}`}>
+                 <div className={`${imageSize} rounded-full overflow-hidden ${imageMargin} border-4 border-accent-gold/20 shadow-golden-glow`}>
+                    <LazyImage 
             src={dish.image} 
             alt={dish.name} 
-            className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" 
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            quality={80}
           />
         </div>
-        <h3 className={`font-playfair ${textSize} text-foreground mt-4 lg:mt-6 animate-text-shimmer bg-gradient-to-r from-foreground via-accent to-foreground bg-[length:400%] bg-clip-text animate-float`}>
-          {dish.name}
-        </h3>
-        <p className={`font-cormorant text-foreground-subtle my-3 lg:my-4 ${isMobile ? 'text-xs' : 'text-base'} flex-grow leading-relaxed ${isMobile ? 'line-clamp-2' : 'max-w-sm'} animate-fade-in`}>
+                 <h3 className={`font-playfair ${textSize} text-foreground mt-4 lg:mt-6 animate-text-shimmer`}>
+           {dish.name}
+         </h3>
+                 <p className={`font-cormorant text-foreground-subtle my-3 lg:my-4 ${isMobile ? 'text-xs' : 'text-base'} flex-grow leading-relaxed ${isMobile ? 'line-clamp-2' : 'max-w-sm'}`}>
           {dish.description}
         </p>
-        <span className={`font-poppins font-semibold text-accent ${priceSize} my-2 lg:my-3 animate-scale-breath`}>
-          {dish.price}
-        </span>
+                 <span className={`font-poppins font-semibold text-accent ${priceSize} my-2 lg:my-3`}>
+           {dish.price}
+         </span>
         
         <button
           onClick={handleOrderClick}
           className={`btn btn-primary ${buttonSize} shadow-soft-sunlight hover:shadow-golden-glow transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent`}
         >
-          <span className="animate-text-shimmer bg-gradient-to-r from-foreground-on-color via-accent-gold to-foreground-on-color bg-[length:400%] bg-clip-text">
+          <span className="animate-text-shimmer">
             Order Now
           </span>
         </button>
@@ -184,17 +174,9 @@ const DiningSection: React.FC = () => {
 
   return (
     <div className="bg-gradient-to-br from-background via-background-secondary to-background-tertiary relative overflow-hidden">
-      {/* Optimized Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-t from-accent/5 via-transparent to-accent-gold/3 animate-gradient-flow" />
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/2" />
-      
-      {/* Simplified Heritage Decorations */}
-      <div className="absolute inset-0 opacity-8 pointer-events-none">
-        <div className="absolute top-32 left-32 w-40 h-40 border border-accent-gold/30 rounded-full animate-float shadow-golden-glow-sm" />
-        <div className="absolute bottom-32 right-32 w-32 h-32 border border-accent/20 rounded-full animate-tilt-3d" />
-        <div className="absolute top-1/3 right-1/5 w-24 h-24 border border-primary/25 rounded-full animate-bounce-gentle" />
-        <div className="absolute bottom-1/4 left-1/6 w-28 h-28 border border-accent-gold/20 rounded-full animate-scale-breath" />
-      </div>
+             {/* Optimized Background Elements - Removed heavy animations */}
+       <div className="absolute inset-0 bg-gradient-to-t from-accent/5 via-transparent to-accent-gold/3" />
+       <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/2" />
 
       {/* ======================= HERO SECTION ======================= */}
       <section className="relative h-[70vh] overflow-hidden flex items-center justify-center">
@@ -208,20 +190,20 @@ const DiningSection: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/40" />
         
         {/* Content */}
-        <div className="relative z-10 text-center text-foreground-on-color px-6 animate-fade-in-up">
-          <p className="font-poppins text-xs tracking-widest text-accent-gold uppercase mb-4 font-medium animate-text-shimmer bg-gradient-to-r from-accent-gold via-white to-accent-gold bg-[length:400%] bg-clip-text text-transparent">
+                 <div className="relative z-10 text-center text-foreground-on-color px-6">
+          <p className="font-poppins text-xs tracking-widest text-accent-gold uppercase mb-4 font-medium animate-text-shimmer">
             Kohinoor Restaurant
           </p>
-          <h1 className="font-cinzel text-4xl md:text-5xl lg:text-6xl mb-6 text-foreground-on-color animate-float">
-            <span className="bg-gradient-to-r from-foreground-on-color to-accent-gold bg-clip-text text-transparent">Heritage</span> Dining
-          </h1>
+                   <h1 className="font-cinzel text-4xl md:text-5xl lg:text-6xl mb-6 text-foreground-on-color animate-float">
+           <span className="bg-gradient-to-r from-foreground-on-color to-accent-gold bg-clip-text text-transparent">Heritage</span> Dining
+         </h1>
           <p className="font-cormorant text-lg md:text-xl mb-8 max-w-3xl mx-auto text-foreground-on-color/90 leading-relaxed">
             Experience the finest blend of traditional Kerala cuisine and colonial elegance in our historic dining spaces
           </p>
-          <button
-            onClick={handleViewMenu}
-            className="btn btn-primary text-lg px-8 py-4 shadow-golden-glow hover:shadow-golden-glow-sm transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent"
-          >
+                     <button
+             onClick={handleViewMenu}
+             className="btn btn-primary text-lg px-8 py-4 shadow-golden-glow hover:shadow-golden-glow-sm hover:scale-105 hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent"
+           >
             View Our Menu
           </button>
         </div>
@@ -229,14 +211,8 @@ const DiningSection: React.FC = () => {
       
       {/* ======================= SIGNATURE DISHES SLIDER ======================= */}
       <div className="bg-gradient-to-tr from-background-secondary via-background to-background-tertiary py-24 md:py-32 overflow-hidden relative">
-        {/* Optimized Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-accent-gold/2 animate-gradient-flow" />
-         
-        {/* Simplified decorative background */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
-          <div className="absolute top-16 left-16 w-32 h-32 border border-accent/30 rounded-full animate-float shadow-golden-glow-sm" />
-          <div className="absolute bottom-16 right-16 w-24 h-24 border border-accent-gold/25 rounded-full animate-tilt-3d" />
-        </div>
+                 {/* Optimized Gradient Background - Removed heavy animations */}
+         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-accent-gold/2" />
 
         <div className="container mx-auto px-6 lg:px-8 pt-16">
           <SectionHeader 
@@ -266,7 +242,7 @@ const DiningSection: React.FC = () => {
                     dish={dish}
                     onClick={() => setCurrentIndex(index)}
                     onOrderNow={handleOrderNow}
-                    className={`absolute w-[450px] cursor-pointer transition-all duration-700 ease-out ${transforms[position as keyof typeof transforms]}`}
+                    className={`absolute w-[450px] cursor-pointer transition-all duration-300 ease-out ${transforms[position as keyof typeof transforms]}`}
                     isCenter={position === 'center'}
                   />
                 );
@@ -311,11 +287,11 @@ const DiningSection: React.FC = () => {
                 <button
                   key={index}
                   onClick={() => handleDotClick(index)}
-                  className={`rounded-full transition-all duration-300 ${
-                    index === currentIndex 
-                      ? 'w-6 h-2 bg-accent shadow-golden-glow-sm animate-scale-breath' 
-                      : 'w-2 h-2 bg-accent/30 hover:bg-accent/50'
-                  }`}
+                                     className={`rounded-full transition-all duration-300 ${
+                     index === currentIndex 
+                       ? 'w-6 h-2 bg-accent shadow-golden-glow-sm' 
+                       : 'w-2 h-2 bg-accent/30 hover:bg-accent/50'
+                   }`}
                   aria-label={`Go to dish ${index + 1}`}
                 />
               ))}
@@ -323,11 +299,11 @@ const DiningSection: React.FC = () => {
           </div>
 
           <div className="text-center mt-16 relative z-10">
-            <button 
-              onClick={handleViewMenu}
-              className="btn btn-primary group inline-flex items-center gap-3 text-lg px-10 py-4 shadow-soft-sunlight-lg hover:shadow-golden-glow animate-float transform hover:-translate-y-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent active:scale-95 transition-all duration-300"
-            >
-              <span className="animate-text-shimmer bg-gradient-to-r from-foreground-on-color via-accent-gold to-foreground-on-color bg-[length:400%] bg-clip-text">
+                         <button 
+               onClick={handleViewMenu}
+               className="btn btn-primary group inline-flex items-center gap-3 text-lg px-10 py-4 shadow-soft-sunlight-lg hover:shadow-golden-glow animate-float hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent active:scale-95 transition-all duration-300"
+             >
+              <span className="animate-text-shimmer">
                 Explore The Full Menu
               </span>
               <ArrowRightIcon />
