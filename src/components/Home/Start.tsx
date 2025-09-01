@@ -77,7 +77,7 @@ const StartSection: React.FC = () => {
   return (
     <section 
       aria-labelledby="welcome-heading"
-      className="min-h-screen bg-background flex items-center relative overflow-hidden py-20"
+      className="min-h-screen bg-background-secondary flex items-center relative overflow-hidden py-20"
     >
       {/* Simplified Decorative Background Elements */}
       <div className="absolute inset-0 opacity-10" aria-hidden="true">

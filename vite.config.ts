@@ -111,10 +111,32 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          animations: ['framer-motion'],
-          ui: ['@radix-ui/react-slot', 'class-variance-authority', 'clsx', 'tailwind-merge']
+          // Core React libraries
+          'react-vendor': ['react', 'react-dom'],
+          
+          // Routing
+          'router': ['react-router-dom'],
+          
+          // UI libraries (if any)
+          'ui-libs': ['@radix-ui/react-slot', 'class-variance-authority', 'clsx', 'tailwind-merge'],
+          
+          // Page chunks for better code splitting
+          'pages-home': ['./src/pages/Home.tsx'],
+          'pages-about': ['./src/pages/About.tsx'],
+          'pages-contact': ['./src/pages/Contact.tsx'],
+          'pages-events': ['./src/pages/Events.tsx'],
+          'pages-booking': ['./src/pages/Booking.tsx'],
+          'pages-dining': ['./src/pages/Dining.tsx'],
+          'pages-destinations': ['./src/pages/Destinations.tsx'],
+          'pages-accommodation': ['./src/pages/AccommodationPage.tsx'],
+          'pages-gallery': ['./src/pages/Gallery.tsx'],
+          
+          // Component chunks
+          'components-hero': ['./src/components/Home/Hero.tsx'],
+          'components-accommodation': ['./src/components/Home/AccommodationSection.tsx'],
+          'components-dining': ['./src/components/Home/DiningSection.tsx'],
+          'components-events': ['./src/components/Home/Events.tsx'],
+          'components-destinations': ['./src/components/Home/Destinations.tsx'],
         }
       }
     },

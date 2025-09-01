@@ -6,7 +6,6 @@ export interface DailySpecial {
   description: string;
   price: number;
   image: string;
-  isDaily: boolean;
 }
 
 export const useDailySpecials = () => {
@@ -41,7 +40,6 @@ export const useDailySpecials = () => {
           description: item.description,
           price: parseFloat(item.price),
           image: item.image || '/images/Dining/menu/default-dish.jpg',
-          isDaily: item.is_daily
         }));
         
         setDailySpecials(transformedData);
@@ -58,7 +56,6 @@ export const useDailySpecials = () => {
             description: "Today's catch prepared with traditional Kerala spices and coconut milk",
             price: 600,
             image: "/images/Dining/menu/kerala-main-course.jpg",
-            isDaily: true
           },
           {
             id: '2',
@@ -66,7 +63,6 @@ export const useDailySpecials = () => {
             description: "Our signature dish prepared with secret family recipe",
             price: 450,
             image: "/images/Dining/menu/heritage-dishes.avif",
-            isDaily: true
           },
           {
             id: '3',
@@ -74,7 +70,6 @@ export const useDailySpecials = () => {
             description: "Aromatic biryani with fresh prawns and fragrant spices",
             price: 650,
             image: "/images/Dining/menu/regional.webp",
-            isDaily: true
           }
         ]);
       } finally {

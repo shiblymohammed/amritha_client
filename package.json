@@ -9,6 +9,8 @@
     "build:no-ts": "vite build",
     "build:analyze": "ANALYZE=true npm run build",
     "build:preview": "npm run build && npm run preview",
+    "analyze": "npm run build:analyze && open dist/stats.html",
+    "build:preview": "npm run build && npm run preview",
     "lint": "eslint .",
     "preview": "vite preview",
     "optimize-images": "imagemin public/images/* --out-dir=public/images/optimized --plugin=webp --plugin=mozjpeg --plugin=pngquant"
