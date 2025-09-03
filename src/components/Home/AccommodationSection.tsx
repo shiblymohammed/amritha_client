@@ -72,7 +72,38 @@ const RoomSlide = memo<{ room: Room; isCurrent: boolean }>(({ room, isCurrent })
 
 RoomSlide.displayName = 'RoomSlide';
 
-// The main slider component
+// Mobile-friendly scroll-snap slider
+const MobileRoomSlider = memo(({ rooms }: { rooms: Room[] }) => {
+  const navigate = useNavigate();
+  const handleBooking = useCallback((id: number) => navigate(`/booking?room=${id}`), [navigate]);
+  const handleViewDetails = useCallback((id: number) => navigate(`/accommodation-details/${id}`), [navigate]);
+  return (
+    <div className="lg:hidden">
+      <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory px-4 pb-2 hide-scrollbar">
+        {rooms.map((room) => (
+          <div key={room.id} className="snap-center shrink-0 w-[85vw] card-base border border-border hover-lift hover-glow overflow-hidden">
+            <div className="h-56 overflow-hidden">
+              <LazyImage src={room.images[0]} alt={room.title} width={800} height={600} className="w-full h-full object-cover" quality={75} />
+            </div>
+            <div className="p-4">
+              <p className="font-poppins text-xs tracking-widest text-accent uppercase mb-1">{room.type}</p>
+              <h3 className="font-playfair text-xl text-foreground mb-2">{room.title}</h3>
+              <p className="font-cormorant text-sm text-foreground-subtle line-clamp-3 mb-3">{room.description}</p>
+              <div className="flex gap-2">
+                <button onClick={() => handleBooking(room.id)} className="btn btn-primary flex-1 py-2 text-sm">Book Now</button>
+                <button onClick={() => handleViewDetails(room.id)} className="btn btn-ghost flex-1 py-2 text-sm">View Details</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+MobileRoomSlider.displayName = 'MobileRoomSlider';
+
+// The main slider component (desktop with smoother drag)
 const RoomSlider = ({ rooms, currentIndex, setCurrentIndex, onNavigateToAccommodation }: { 
     rooms: Room[]; 
     currentIndex: number; 
@@ -82,8 +113,9 @@ const RoomSlider = ({ rooms, currentIndex, setCurrentIndex, onNavigateToAccommod
     const [isDragging, setIsDragging] = useState(false);
     const [dragOffset, setDragOffset] = useState(0);
     const dragStartRef = useRef(0);
-    const trackRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const rafRef = useRef<number | null>(null);
+    const queuedX = useRef<number | null>(null);
 
     const paginate = useCallback((newIndex: number) => {
         if (newIndex < 0) newIndex = rooms.length - 1;
@@ -97,16 +129,37 @@ const RoomSlider = ({ rooms, currentIndex, setCurrentIndex, onNavigateToAccommod
         document.body.style.userSelect = 'none';
     };
 
-    const handleDragMove = (clientX: number) => {
-        if (!isDragging) return;
+    const updateDrag = (clientX: number) => {
         const drag = clientX - dragStartRef.current;
         setDragOffset(drag);
+    };
+
+    const onRaf = () => {
+        if (queuedX.current !== null) {
+            updateDrag(queuedX.current);
+            queuedX.current = null;
+        }
+        rafRef.current = requestAnimationFrame(onRaf);
+    };
+
+    const handleDragMove = (clientX: number) => {
+        if (!isDragging) return;
+        queuedX.current = clientX;
+        if (rafRef.current === null) rafRef.current = requestAnimationFrame(onRaf);
+    };
+
+    const endRaf = () => {
+        if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+        queuedX.current = null;
     };
 
     const handleDragEnd = () => {
         setIsDragging(false);
         document.body.style.userSelect = '';
-        const swipeThreshold = containerRef.current ? containerRef.current.clientWidth / 4 : 50;
+        endRaf();
+        const width = containerRef.current ? containerRef.current.clientWidth : 300;
+        const swipeThreshold = width * 0.15; // lower threshold for snappier response
         if (Math.abs(dragOffset) > swipeThreshold) {
             paginate(dragOffset > 0 ? currentIndex - 1 : currentIndex + 1);
         }
@@ -123,9 +176,13 @@ const RoomSlider = ({ rooms, currentIndex, setCurrentIndex, onNavigateToAccommod
 
     return (
         <div role="region" aria-roledescription="carousel" aria-label="Select a room">
+            {/* Mobile slider */}
+            <MobileRoomSlider rooms={rooms} />
+
+            {/* Desktop slider */}
             <div
                 ref={containerRef}
-                className="relative overflow-hidden cursor-grab active:cursor-grabbing"
+                className="relative overflow-hidden cursor-grab active:cursor-grabbing hidden lg:block"
                 onMouseDown={onMouseDown}
                 onMouseMove={onMouseMove}
                 onMouseUp={onMouseUp}
@@ -135,11 +192,11 @@ const RoomSlider = ({ rooms, currentIndex, setCurrentIndex, onNavigateToAccommod
                 onTouchEnd={onTouchEnd}
             >
                 <div
-                    ref={trackRef}
                     className="flex"
                     style={{
                         transform: `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`,
-                        transition: isDragging ? 'none' : 'transform 0.5s ease-in-out',
+                        transition: isDragging ? 'none' : 'transform 360ms cubic-bezier(0.22, 0.61, 0.36, 1)',
+                        willChange: 'transform'
                     }}
                 >
                     {rooms.map((room, index) => (
@@ -148,8 +205,8 @@ const RoomSlider = ({ rooms, currentIndex, setCurrentIndex, onNavigateToAccommod
                 </div>
             </div>
 
-            {/* Navigation Controls */}
-            <div className="flex justify-center items-center gap-4 mt-8">
+            {/* Navigation Controls (desktop) */}
+            <div className="hidden lg:flex justify-center items-center gap-4 mt-8">
                 <button onClick={() => paginate(currentIndex - 1)} aria-label="Previous room" className="btn btn-ghost p-3 rounded-full transition-transform hover:scale-105 active:scale-95">&#10094;</button>
                 <div className="flex justify-center gap-3">
                     {rooms.map((_, index) => (
@@ -168,7 +225,7 @@ const RoomSlider = ({ rooms, currentIndex, setCurrentIndex, onNavigateToAccommod
                 <div className="animate-float" style={{ animationDelay: '0.8s' }}>
                     <button onClick={onNavigateToAccommodation} className="btn btn-primary group inline-flex items-center gap-3 text-lg px-10 py-4 shadow-soft-sunlight-lg transition-transform hover:-translate-y-1 active:scale-95">
                         <span>Explore All Rooms</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 transition-transform group-hover:translate-x-1"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 transition-transform group-hover:translate-x-1"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </button>
                 </div>
             </div>
@@ -208,8 +265,6 @@ FacilitiesGrid.displayName = 'FacilitiesGrid';
 const AccommodationSection: React.FC = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const navigate = useNavigate();
-    
-
     
     // Optimized navigation handler
     const handleNavigateToAccommodation = useCallback(() => {

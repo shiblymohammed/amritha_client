@@ -62,6 +62,16 @@ const Dining: React.FC = () => {
     setSelectedCategory(categoryName);
   };
 
+  // Placeholder images for Featured Dishes (dummy images for now)
+  const featuredPlaceholders = [
+    '/images/Dining/niagrachicken.jpg',
+    '/images/Dining/meenpollichathu.jpg',
+    '/images/Dining/beefularthiyathu.jpg',
+    '/images/Dining/chickenmushroom.jpg',
+    '/images/Dining/prawnmango.jpg',
+    '/images/Dining/SAJAN-9.webp'
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -168,33 +178,33 @@ const Dining: React.FC = () => {
                   className="opacity-0 animate-[fadeInUp_0.8s_ease-out_forwards]"
                   style={{ animationDelay: `${0.8 + index * 0.2}s` }}
                 >
-                                  <div className="bg-gradient-to-br from-background to-background-secondary border border-soft rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-300 backdrop-blur-sm hover:scale-105 h-[500px] w-full">
-                  <div className="w-56 h-56 rounded-full overflow-hidden -mt-16 border-4 border-accent/20 shadow-golden-glow flex-shrink-0">
-                    <LazyImage 
-                      src={special.image} 
-                      alt={special.name} 
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                      quality={80}
-                    />
-                  </div>
-                  <h3 className="font-playfair text-xl text-foreground mt-4 lg:mt-6 animate-text-shimmer flex-shrink-0">
-                    {special.name}
-                  </h3>
-                  <p className="font-cormorant text-foreground-subtle my-3 lg:my-4 text-base leading-relaxed max-w-sm flex-grow overflow-hidden">
-                    {special.description}
-                  </p>
-                  <span className="font-poppins font-semibold text-accent text-xl my-2 lg:my-3 flex-shrink-0">
-                    ₹{special.price}
-                  </span>
-                  
-                  <button
-                    className="btn btn-primary text-sm px-6 py-2 shadow-soft-sunlight hover:shadow-golden-glow transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-600 flex-shrink-0"
-                  >
-                    <span className="animate-text-shimmer">
-                      Add to Table
+                  <div className="bg-gradient-to-br from-background to-background-secondary border border-soft rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-300 backdrop-blur-sm hover:scale-105 h-[500px] w-full">
+                    <div className="w-56 h-56 rounded-full overflow-hidden -mt-16 border-4 border-accent/20 shadow-golden-glow flex-shrink-0">
+                      <LazyImage 
+                        src={special.image || featuredPlaceholders[index % featuredPlaceholders.length]} 
+                        alt={special.name} 
+                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        quality={80}
+                      />
+                    </div>
+                    <h3 className="font-playfair text-xl text-foreground mt-4 lg:mt-6 animate-text-shimmer flex-shrink-0">
+                      {special.name}
+                    </h3>
+                    <p className="font-cormorant text-foreground-subtle my-3 lg:my-4 text-base leading-relaxed max-w-sm flex-grow overflow-hidden">
+                      {special.description}
+                    </p>
+                    <span className="font-poppins font-semibold text-accent text-xl my-2 lg:my-3 flex-shrink-0">
+                      ₹{special.price}
                     </span>
-                  </button>
-                </div>
+                    
+                    <button
+                      className="btn btn-primary text-sm px-6 py-2 shadow-soft-sunlight hover:shadow-golden-glow transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-600 flex-shrink-0"
+                    >
+                      <span className="animate-text-shimmer">
+                        Add to Table
+                      </span>
+                    </button>
+                  </div>
                 </div>
               ))
             )}
@@ -243,7 +253,7 @@ const Dining: React.FC = () => {
                 <div className="bg-gradient-to-br from-background to-background-secondary border border-soft rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-300 backdrop-blur-sm hover:scale-105 h-[500px] w-full">
                   <div className="w-56 h-56 rounded-full overflow-hidden -mt-16 border-4 border-accent/20 shadow-golden-glow flex-shrink-0">
                     <LazyImage 
-                      src="/images/Dining/menu/default-dish.jpg"
+                      src={featuredPlaceholders[index % featuredPlaceholders.length]}
                       alt={dish.name} 
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                       quality={80}

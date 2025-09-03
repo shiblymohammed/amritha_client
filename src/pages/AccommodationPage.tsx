@@ -16,48 +16,59 @@ interface RoomType {
 
 const roomTypes: RoomType[] = [
   {
-    id: 'heritage-premium',
-    name: 'Heritage Premium Room',
-    description: 'Spacious, garden-facing, with sit-out areas',
-    image: '/images/Accommodation/room (1).webp',
+    id: 'president-deluxe',
+    name: "The President's Chamber — Deluxe",
+    description: 'A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts',
+    image: '/images/Accommodation/room (2).webp',
     price: '₹8,500',
     capacity: 2,
     size: '450 sq ft',
-    features: ['Garden View', 'Sit-out Area', 'Period Furniture', 'Natural Lighting'],
+    features: ['Colonial Style', 'Period Furniture', 'Natural Lighting', 'Complimentary Breakfast'],
     amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service']
   },
   {
-    id: 'deluxe',
-    name: 'Deluxe Room',
-    description: 'Comfortable elegance with classic wooden decor',
-    image: '/images/Accommodation/room (2).webp',
-    price: '₹6,500',
-    capacity: 2,
-    size: '380 sq ft',
-    features: ['Classic Wooden Decor', 'City View', 'Balcony', 'Traditional Artwork'],
-    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar']
-  },
-  {
-    id: 'executive',
-    name: 'Executive Room',
-    description: 'Extra space and style, perfect for long stays',
+    id: 'magistrate-executive',
+    name: "The Magistrate's Chamber — Executive",
+    description: 'Executive class elegance with generous space and period details for a serene stay',
     image: '/images/Accommodation/room (3).webp',
     price: '₹10,500',
     capacity: 3,
-    size: '550 sq ft',
+    size: '520 sq ft',
     features: ['Extra Space', 'Work Area', 'Lounge Space', 'Premium Amenities'],
     amenities: ['King Bed + Sofa Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Work Desk', 'Coffee Maker']
   },
   {
-    id: 'accessible',
-    name: 'Differently-Abled Room',
-    description: 'Fully accessible, spacious, and dignified',
+    id: 'collector-deluxe',
+    name: "The Collector's Chamber — Deluxe",
+    description: 'Deluxe comfort with curated antique accents and a calm, sophisticated ambiance',
     image: '/images/Accommodation/room (4).webp',
     price: '₹7,500',
     capacity: 2,
-    size: '500 sq ft',
-    features: ['Wheelchair Accessible', 'Spacious Layout', 'Accessible Bathroom', 'Emergency Features'],
-    amenities: ['King Bed', 'Accessible Bathroom', 'Air Conditioning', 'Free WiFi', 'Emergency Call Button', 'Grab Bars']
+    size: '480 sq ft',
+    features: ['Classic Wooden Decor', 'City View', 'Traditional Artwork', 'Complimentary Breakfast'],
+    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar']
+  },
+  {
+    id: 'residency-executive',
+    name: 'The Residency Room — Executive',
+    description: 'Executive refinement with heritage textures, ideal for business and leisure travelers',
+    image: '/images/Accommodation/room (5).webp',
+    price: '₹9,500',
+    capacity: 3,
+    size: '520 sq ft',
+    features: ['Spacious Layout', 'Quiet Wing', 'Premium Bedding', 'Desk & Seating Area'],
+    amenities: ['King Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Room Service']
+  },
+  {
+    id: 'plantation-deluxe',
+    name: 'The Plantation Room — Deluxe',
+    description: 'Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities',
+    image: '/images/Accommodation/room (6).webp',
+    price: '₹6,500',
+    capacity: 2,
+    size: '460 sq ft',
+    features: ['Heritage Design', 'Garden View', 'Natural Lighting', 'Complimentary Breakfast'],
+    amenities: ['Queen Bed', 'En-suite Bathroom', 'Air Conditioning', 'Free WiFi', 'Mini Bar']
   }
 ];
 
@@ -148,7 +159,6 @@ const AccommodationPage: React.FC = () => {
 
               <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-2 relative animate-float">
                 Stay in Colonial Elegance
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent" />
               </h2>
               <p className="font-cormorant text-xl text-foreground-subtle leading-relaxed">
                 Our rooms are more than just places to sleep — they are a journey into history. 
@@ -396,7 +406,7 @@ const AccommodationPage: React.FC = () => {
                     className="w-full h-full object-cover rounded-lg"
                     onError={(e) => { (e.target as HTMLImageElement).src = '/images/Accommodation/room (1).webp'; }}
                   />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent flex items=end p-4">
                     <p className="text-foreground-on-color font-playfair text-xl">Room {index + 1}</p>
                   </div>
                 </div>
