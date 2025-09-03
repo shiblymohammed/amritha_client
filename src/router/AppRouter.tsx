@@ -8,7 +8,7 @@ const About = lazy(() => import('../pages/About'));
 const Contact = lazy(() => import('../pages/Contact'));
 const Events = lazy(() => import('../pages/Events'));
 const Booking = lazy(() => import('../pages/Booking'));
-// const Dining = lazy(() => import('../pages/Dining'));
+const Dining = lazy(() => import('../pages/Dining'));
 const DestinationsPage = lazy(() => import('../pages/Destinations'));
 const AccommodationPage = lazy(() => import('../pages/AccommodationPage'));
 const Gallery = lazy(() => import('../pages/Gallery'));
@@ -64,7 +64,7 @@ const AppRouter = () => {
             path="dining" 
             element={
               <Suspense fallback={<PageLoader />}>
-                {/* <Dining /> */}
+                <Dining />
               </Suspense>
             } 
           />

@@ -115,13 +115,13 @@ const RoomShowcaseCard = memo<{ room: Room; }>(({ room }) => (
                         ₹{room.price.toLocaleString()}
                     </p>
                     <p className="text-xs opacity-75">per night</p>
-                </div>
             </div>
+        </div>
             
             {/* Hover Overlay Effect */}
             <div className="absolute inset-0 bg-gradient-to-t from-accent-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-        </div>
-    </div>
+            </div>
+                </div>
 ));
 
 // Room Dropdown Option
@@ -135,7 +135,7 @@ const RoomDropdownOption = memo<{ room: Room; onSelect: () => void; }>(({ room, 
             <h4 className="font-playfair font-semibold text-foreground">{room.name}</h4>
             <p className="text-sm text-foreground-subtle">{room.amenities.slice(0, 2).join(', ')}</p>
             <p className="font-poppins font-bold text-accent">₹{room.price.toLocaleString()}/night</p>
-        </div>
+                </div>
     </div>
 ));
 
@@ -152,8 +152,8 @@ const SelectedRoomCard = memo<{ room: Room; quantity: number; onRemove: () => vo
             <button onClick={onRemove} className="text-xs text-red-500 hover:text-red-700 transition-colors hover-bounce font-medium">
                 ✕ Remove
             </button>
+            </div>
         </div>
-    </div>
 ));
 
 const ConfirmationModal = memo<{ bookingDetails: GuestInfo & BookingDetails & PriceSummary; onClose: () => void; }>(({ bookingDetails, onClose }) => (
@@ -171,7 +171,7 @@ const ConfirmationModal = memo<{ bookingDetails: GuestInfo & BookingDetails & Pr
             <div className="animate-float" style={{ animationDelay: '0.2s' }}>
                 <button onClick={onClose} className="btn btn-primary w-full hover-lift shadow-golden-glow">✨ Continue Exploring</button>
             </div>
-        </div>
+            </div>
     </div>
 ));
 
@@ -329,7 +329,7 @@ const BookingPage = memo(() => {
 
     return (
         <div className="bg-background font-cormorant text-foreground">
-            {isConfirmed && <ConfirmationModal bookingDetails={{...guestInfo, ...bookingDetails, ...priceSummary}} onClose={() => setIsConfirmed(false)} />}
+                {isConfirmed && <ConfirmationModal bookingDetails={{...guestInfo, ...bookingDetails, ...priceSummary}} onClose={() => setIsConfirmed(false)} />}
             
             <main>
                 <section className="relative h-[70vh] overflow-hidden flex items-center justify-center">
@@ -359,8 +359,8 @@ const BookingPage = memo(() => {
                         <div className="animate-float" style={{ animationDelay: '0.2s' }}>
                             <p 
                                 className="text-body text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed"
-                            >
-                                Select your preferred suite and embark on a journey through time and luxury.
+                        >
+                            Select your preferred suite and embark on a journey through time and luxury.
                                 <br />
                                 <span className="text-accent-gold/80 text-lg">Experience colonial grandeur reimagined</span>
                             </p>
@@ -424,7 +424,7 @@ const BookingPage = memo(() => {
                                     className="flex transition-transform duration-500 ease-out"
                                     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                                 >
-                                    {roomsData.map(room => (
+                        {roomsData.map(room => (
                                         <div key={room.id} className="w-full flex-shrink-0 px-2">
                                             <RoomShowcaseCard room={room} />
                                         </div>
@@ -448,9 +448,9 @@ const BookingPage = memo(() => {
                                             className={`w-3 h-3 rounded-full transition-all ${
                                                 currentSlide === index ? 'bg-accent scale-125' : 'bg-accent/30'
                                             }`}
-                                        />
-                                    ))}
-                                </div>
+                            />
+                        ))}
+                    </div>
                                 <button 
                                     onClick={handleNextSlide}
                                     className="w-10 h-10 rounded-full bg-accent/20 backdrop-blur-sm flex items-center justify-center hover:bg-accent/30 transition-colors"
@@ -523,7 +523,7 @@ const BookingPage = memo(() => {
                                                 {errors.checkOut && <p className="text-red-500 text-sm mt-2">{errors.checkOut}</p>}
                                             </div>
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
                                                                                             <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Adults</label>
                                             <div className="relative">
@@ -687,8 +687,8 @@ const BookingPage = memo(() => {
                                 </button>
                             </form>
                         </div>
-                        </div>
                     </div>
+                </div>
                 </section>
                 
                                 <section className="py-16 md:py-24 px-6 md:px-12 border-t border-border bg-gradient-to-br from-background-secondary to-background">
