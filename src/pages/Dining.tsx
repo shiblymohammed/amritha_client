@@ -69,7 +69,7 @@ const Dining: React.FC = () => {
     '/images/Dining/beefularthiyathu.jpg',
     '/images/Dining/chickenmushroom.jpg',
     '/images/Dining/prawnmango.jpg',
-    '/images/Dining/SAJAN-9.webp'
+    '/images/Dining/niagrachicken.webp'
   ];
 
   return (

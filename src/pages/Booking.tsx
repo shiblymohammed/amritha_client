@@ -55,10 +55,11 @@ const CheckCircleIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24"
 // == 3. DUMMY DATA (Simulating API response for rooms)
 // =================================================================
 const roomsData: Room[] = [
-    { id: 1, name: "Heritage Premium Room", description: "Spacious, garden-facing, with sit-out areas. Colonial Style Heritage Rooms with complimentary breakfast and modern amenities.", amenities: ["King Bed", "Garden View", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar", "Flat-screen TV"], capacity: 2, price: 8500, image: "/images/Accommodation/room (1).webp" },
-    { id: 2, name: "Deluxe Room", description: "Comfortable elegance with classic wooden decor. Spacious 650 sq ft room with colonial heritage charm.", amenities: ["Queen Bed", "Veranda", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar", "Flat-screen TV"], capacity: 3, price: 10000, image: "/images/Accommodation/room (4).webp" },
-    { id: 3, name: "Differently Abled Room", description: "Fully accessible, spacious, and dignified. Specially designed for comfort and accessibility.", amenities: ["Queen Bed", "Wheelchair Accessible", "Roll-in Shower", "Enhanced Space", "Safety Features"], capacity: 2, price: 9500, image: "/images/Accommodation/room (7).webp" },
-    { id: 4, name: "Executive Room", description: "Extra space and style, perfect for long stays. Premium accommodation with enhanced amenities and comfort.", amenities: ["King Bed", "Living Area", "Executive Lounge", "Air Conditioned", "Room Service", "Mini Bar", "Flat-screen TV"], capacity: 4, price: 12500, image: "/images/Accommodation/room (4).webp" },
+    { id: 1, name: "The President's Chamber — Deluxe", description: "A refined deluxe chamber with heritage aesthetics, curated furnishings, and modern comforts.", amenities: ["King Bed", "Garden View", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar", "Flat-screen TV"], capacity: 2, price: 8500, image: "/images/Accommodation/room (2).webp" },
+    { id: 2, name: "The Magistrate's Chamber — Executive", description: "Executive class elegance with generous space and period details for a serene stay.", amenities: ["King Bed + Sofa Bed", "Work Desk", "Wi-Fi", "Air Conditioned", "Room Service", "Coffee Maker", "Flat-screen TV"], capacity: 3, price: 10500, image: "/images/Accommodation/room (3).webp" },
+    { id: 3, name: "The Collector's Chamber — Deluxe", description: "Deluxe comfort with curated antique accents and a calm, sophisticated ambiance.", amenities: ["Queen Bed", "Traditional Artwork", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar"], capacity: 2, price: 7500, image: "/images/Accommodation/room (4).webp" },
+    { id: 4, name: "The Residency Room — Executive", description: "Executive refinement with heritage textures, ideal for business and leisure travelers.", amenities: ["King Bed", "Quiet Wing", "Wi-Fi", "Air Conditioned", "Room Service", "Flat-screen TV"], capacity: 3, price: 9500, image: "/images/Accommodation/room (5).webp" },
+    { id: 5, name: "The Plantation Room — Deluxe", description: "Deluxe room inspired by plantation-era charm with tranquil tones and modern amenities.", amenities: ["Queen Bed", "Garden View", "Wi-Fi", "Air Conditioned", "Room Service", "Mini Bar"], capacity: 2, price: 6500, image: "/images/Accommodation/room (6).webp" },
 ];
 
 const whyBookWithUs = [
@@ -453,7 +454,7 @@ const BookingPage = memo(() => {
                     </div>
                                 <button 
                                     onClick={handleNextSlide}
-                                    className="w-10 h-10 rounded-full bg-accent/20 backdrop-blur-sm flex items-center justify-center hover:bg-accent/30 transition-colors"
+                                    className="w-10 h-10 rounded-full bg-accent/20 backdrop-blur-sm flex items=center justify-center hover:bg-accent/30 transition-colors"
                                 >
                                     →
                                 </button>
@@ -507,7 +508,7 @@ const BookingPage = memo(() => {
                                     <div className="space-y-6">
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
-                                                                                            <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Check-in Date</label>
+                                                <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Check-in Date</label>
                                             <div className="relative">
                                                 <input type="date" name="checkIn" value={bookingDetails.checkIn} onChange={handleBookingChange} className="w-full p-4 pl-12 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 text-base text-foreground"/>
                                                 <CalendarIcon />
@@ -523,9 +524,9 @@ const BookingPage = memo(() => {
                                                 {errors.checkOut && <p className="text-red-500 text-sm mt-2">{errors.checkOut}</p>}
                                             </div>
                                         </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div>
-                                                                                            <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Adults</label>
+                                                <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Adults</label>
                                             <div className="relative">
                                                 <select name="adults" value={bookingDetails.adults} onChange={handleBookingChange} className="w-full p-4 pl-12 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 appearance-none text-base text-foreground">
                                                     <option>1</option><option>2</option><option>3</option><option>4</option>
@@ -534,7 +535,7 @@ const BookingPage = memo(() => {
                                             </div>
                                             </div>
                                             <div>
-                                                                                            <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Children</label>
+                                                <label className="font-poppins text-sm font-medium text-foreground-heading block mb-3">Children</label>
                                             <div className="relative">
                                                 <select name="children" value={bookingDetails.children} onChange={handleBookingChange} className="w-full p-4 pl-12 glassmorphic border-2 border-accent/20 rounded-xl focus:border-accent focus:outline-none transition-all duration-300 hover:border-accent/40 appearance-none text-base text-foreground">
                                                     <option>0</option><option>1</option><option>2</option>
@@ -638,7 +639,7 @@ const BookingPage = memo(() => {
                                         </div>
                                     </div>
                                 )}
-                                {errors.room && <p className="text-red-500 text-sm mt-2 text-center glassmorphic border border-red-200 rounded-lg p-3 animate-bounce-gentle">{errors.room}</p>}
+                                {errors.room && <p className="text-red-500 text-sm mt-2 text-center glassmorphic border border-red-200 rounded-lg p-3 animate-bounce-gentle" id="booking-summary">{errors.room}</p>}
                                 
                                 <div className="pt-6 border-t border-accent/20">
                                     <div className="text-center mb-6">
@@ -691,7 +692,7 @@ const BookingPage = memo(() => {
                 </div>
                 </section>
                 
-                                <section className="py-16 md:py-24 px-6 md:px-12 border-t border-border bg-gradient-to-br from-background-secondary to-background">
+                <section className="py-16 md:py-24 px-6 md:px-12 border-t border-border bg-gradient-to-br from-background-secondary to-background">
                     <div className="container mx-auto">
                         <div className="animate-float">
                             <h2 className="font-playfair text-h2 text-foreground text-center mb-12 text-glow-gold">Why Book With Us?</h2>

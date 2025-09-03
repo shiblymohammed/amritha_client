@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { X as CloseIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import LazyImage from '../components/ui/LazyImage';
 
 // This is the main gallery page component.
 // It includes a hero section, a filterable image grid, and an expanded modal with navigation.
@@ -232,11 +233,11 @@ const Gallery = () => {
               style={{ animationDelay: `${index * 50}ms`, height: '90vh' }}
               onClick={() => handleImageClick(image, index)}
             >
-              <img 
+              <LazyImage 
                 src={image.url} 
                 alt={image.alt} 
                 className="absolute inset-0 w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-110"
-                onError={(e) => { (e.target as HTMLImageElement).src = '/images/home.webp'; }}
+                quality={70}
               />
               {/* Overlay with gradient, caption and hint */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
@@ -288,7 +289,7 @@ const Gallery = () => {
               onMouseUp={onMouseUp}
               onMouseLeave={onMouseLeave}
             >
-              <img 
+              <LazyImage 
                 src={selectedImage.url} 
                 alt={selectedImage.alt} 
                 className="absolute top-1/2 left-1/2 rounded-lg shadow-soft-sunlight object-contain"
@@ -298,6 +299,7 @@ const Gallery = () => {
                   maxWidth: zoom === 1 ? '100%' : 'none',
                   maxHeight: zoom === 1 ? '100%' : 'none'
                 }}
+                quality={80}
               />
             </div>
 
