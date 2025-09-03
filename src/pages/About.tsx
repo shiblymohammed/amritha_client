@@ -23,23 +23,25 @@ const About = () => {
         <img
           src={heroImage}
           alt="Heritage facade"
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          style={{
-            transform: `translateY(-${parallaxOffset}px)`,
-            willChange: 'transform'
-          }}
+          className="absolute top-0 left-0 w-full h-full object-cover animate-scale-breath"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/40"></div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center animate-fade-in-up px-6">
+          <div className="text-center animate-fade-in-up px-6 text-foreground-on-color">
             <p className="font-poppins text-xs tracking-widest text-accent-gold uppercase mb-4 font-medium opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards]">
-              Our Story
+              Amritha Heritage
             </p>
-            <h1 className="font-cinzel text-4xl md:text-5xl lg:text-6xl text-foreground-on-color mb-6 animate-float opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards]">
-              From Bungalow to Boutique Heritage
-            </h1>
-            <p className="font-cormorant text-lg md:text-xl text-foreground-on-color/90 max-w-3xl mx-auto leading-relaxed opacity-0 animate-[fadeInUp_0.8s_ease-out_0.5s_forwards]">
-              Preserving the soul of the past while embracing modern hospitality.
+            <div className="opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards]">
+              <h1 className="font-cinzel text-5xl md:text-6xl lg:text-7xl mb-6 leading-tight animate-float">
+                About Us
+                <br />
+                <span className="italic bg-gradient-to-r from-accent-gold to-accent bg-clip-text text-transparent">
+                  Our Story & Legacy
+                </span>
+              </h1>
+            </div>
+            <p className="font-cormorant text-lg md:text-xl mb-8 max-w-3xl mx-auto text-foreground-on-color/90 leading-relaxed opacity-0 animate-[fadeInUp_0.8s_ease-out_0.5s_forwards]">
+              From historic Essenden Bungalow to a boutique heritage stay—preserving the soul of the past while embracing modern hospitality.
             </p>
           </div>
         </div>
