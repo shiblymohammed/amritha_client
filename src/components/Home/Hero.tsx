@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
         loop
         playsInline
         preload="metadata"
-        poster="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&h=800&fit=crop&q=75&auto=format"
+        poster="/images/hero2.jpg"
         style={{
           transform: `translate3d(0, ${parallaxOffset}px, 0)`,
         }}

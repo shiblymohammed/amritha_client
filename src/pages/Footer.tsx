@@ -144,6 +144,11 @@ function Footer() {
           <p className="text-xs font-poppins text-foreground-subtle animate-text-shimmer bg-gradient-to-r from-foreground-subtle via-accent to-foreground-subtle bg-400% bg-clip-text">
             © 2025 Amritha Heritage. All Rights Reserved.
           </p>
+          <div className="flex items-center flex-wrap gap-4 text-xs font-poppins text-foreground-subtle">
+            <span>Phone: +91 471 2220024 / 2220025 · +91 471</span>
+            <span>Email: <a href="mailto:info@amrithaheritage.com" className="hover:text-accent transition-colors">info@amrithaheritage.com</a></span>
+            <a href="tel:+914712220024" className="btn btn-primary px-3 py-1 animate-float">Call Now</a>
+          </div>
           <div className="flex items-center space-x-4">
             <SocialIcon href="#" title="Facebook"><FacebookIcon /></SocialIcon>
             <SocialIcon href="#" title="Instagram"><InstagramIcon /></SocialIcon>

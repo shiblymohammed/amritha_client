@@ -118,7 +118,7 @@ const NavBar: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const navBackground = hasScrolled ? 'glassmorphic shadow-soft-sunlight-lg border-b border-border/20' : 'bg-transparent';
+  const navBackground = hasScrolled ? 'bg-background shadow-soft-sunlight-lg border-b border-border/20' : 'bg-transparent';
   const hamburgerColor = hasScrolled && !isMenuOpen ? 'bg-foreground' : 'bg-foreground-on-color';
   const logoSrc = hasScrolled ? '/logoBlack.png' : '/logoWhite.png';
 
@@ -128,7 +128,7 @@ const NavBar: React.FC = () => {
     { name: "Kohinoor Dining", href: "dining", hasHighlight: true },
     { name: "About Us", href: "about" },
     { name: "Contact", href: "contact" },
-    { name: "Events", href: "contact" },
+    { name: "Events", href: "events" },
     { name: "Explore Our Gallery", href: "gallery" },
     { name: "Nearby Locations", href: "destinations" },
 
@@ -145,6 +145,8 @@ const NavBar: React.FC = () => {
               onClick={toggleMenu}
               className={`relative z-50 w-8 h-8 flex flex-col justify-center items-center transition-transform duration-300 ease-out group ${isMenuOpen ? 'transform rotate-180' : ''}`}
               aria-label="Toggle menu"
+              aria-expanded={isMenuOpen}
+              aria-controls="site-menu"
             >
               <span className={`block absolute h-0.5 w-full transition-all duration-300 ease-out ${isMenuOpen ? 'bg-text-on-color rotate-45' : hamburgerColor + ' -translate-y-1.5'}`}></span>
               <span className={`block absolute h-0.5 w-full transition-all duration-300 ease-out ${isMenuOpen ? 'bg-text-on-color -rotate-45' : hamburgerColor + ' translate-y-1.5'}`}></span>
@@ -163,11 +165,11 @@ const NavBar: React.FC = () => {
 
             <a 
                 href="booking"
-                className={`font-poppins text-sm font-medium px-6 py-2.5 rounded-lg transition-all duration-300 ease-out whitespace-nowrap hidden sm:block animate-float
+                className={`font-poppins font-medium rounded-lg transition-all duration-300 ease-out whitespace-nowrap
                 ${hasScrolled 
                     ? 'btn btn-primary shadow-soft-sunlight hover:shadow-golden-glow-sm transform hover:scale-105' 
-                    : 'btn btn-ghost text-foreground-on-color border-foreground-on-color/70 hover:bg-foreground-on-color hover:text-foreground shadow-golden-glow-sm'
-                }`}
+                    : 'btn btn-primary shadow-soft-sunlight hover:shadow-golden-glow-sm transform hover:scale-105'
+                } text-xs px-4 py-2 md:text-sm md:px-6 md:py-2.5 animate-float`}
             >
               Book Now
             </a>
@@ -176,31 +178,41 @@ const NavBar: React.FC = () => {
       </nav>
 
       <div
-        className={`fixed inset-0 z-40 w-full h-full bg-menu-overlay bg-[url('https://www.transparenttextures.com/patterns/damask.png')] bg-repeat transition-transform duration-700 ease-in-out ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}
+        className={`fixed inset-0 z-40 w-full h-full bg-primary transition-transform duration-500 ease-out ${isMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}
+        id="site-menu"
+        role="dialog"
+        aria-modal="true"
       >
         <div className="container mx-auto px-6 lg:px-8 h-full grid grid-cols-1 lg:grid-cols-2 items-center">
           
           <nav className="flex flex-col items-center lg:items-start">
             {navLinks.map((link, index) => (
-              <div key={link.name} className="flex flex-col items-center lg:items-start my-2">
+              <div key={link.name} className="flex flex-col items-center lg:items-start my-1 md:my-2">
                 <a
                   href={link.href}
-                  className={`font-playfair text-4xl md:text-6xl text-text-on-color transition-all duration-500 ease-out hover:text-white hover:tracking-widest ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                  style={{ transitionDelay: `${150 * (index + 1)}ms` }}
+                  className={`font-playfair text-2xl md:text-4xl lg:text-5xl leading-tight text-text-on-color transition-all duration-300 ease-out hover:text-white hover:tracking-wide ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                  style={{ transitionDelay: `${120 * (index + 1)}ms` }}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
                 </a>
                 {link.hasHighlight && isMenuOpen && (
-                    <div className={`transition-all duration-500 ease-out ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: `${150 * (index + 2)}ms` }}>
+                    <div className={`transition-opacity duration-300 ease-out ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: `${120 * (index + 2)}ms` }}>
                         <MenuHighlight />
                     </div>
                 )}
               </div>
             ))}
+
+            {/* Mobile Book button inside menu */}
+            <div className="mt-6 lg:hidden">
+              <a href="booking" onClick={() => setIsMenuOpen(false)} className="btn btn-primary w-full text-center animate-float">
+                Book Now
+              </a>
+            </div>
           </nav>
 
-          <div className={`hidden lg:flex flex-col items-start text-left transition-opacity duration-500 ease-out ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '600ms' }}>
+          <div className={`hidden lg:flex flex-col items-start text-left transition-opacity duration-300 ease-out ${isMenuOpen ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '480ms' }}>
             <h3 className="font-playfair text-h3 text-text-on-color/90 mb-4">About Amritha</h3>
             <p className="font-cormorant text-text-on-color/70 leading-relaxed max-w-md mb-8">
               Once known as Essenden Bungalow, our heritage landmark offers a nostalgic journey through Thiruvananthapuram's glorious past, blending colonial elegance with modern luxury.

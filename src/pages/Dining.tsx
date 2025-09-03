@@ -24,7 +24,7 @@ const Dining: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Set default collection when component mounts
+  // Set first collection to open by default but maintain toggle functionality
   useEffect(() => {
     if (menuData.length > 0 && !selectedCollection) {
       setSelectedCollection(menuData[0].collection);
@@ -45,10 +45,16 @@ const Dining: React.FC = () => {
   );
 
   const handleCollectionSelect = (collectionName: string) => {
-    setSelectedCollection(collectionName);
-    const collection = menuData.find(c => c.collection === collectionName);
-    if (collection && collection.categories.length > 0) {
-      setSelectedCategory(collection.categories[0].category);
+    // Toggle the collection - if it's already selected, close it
+    if (selectedCollection === collectionName) {
+      setSelectedCollection('');
+      setSelectedCategory('');
+    } else {
+      setSelectedCollection(collectionName);
+      const collection = menuData.find(c => c.collection === collectionName);
+      if (collection && collection.categories.length > 0) {
+        setSelectedCategory(collection.categories[0].category);
+      }
     }
   };
 
@@ -109,17 +115,17 @@ const Dining: React.FC = () => {
       </section>
 
       {/* Daily Specials Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-background-secondary">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <div className="space-y-8 flex flex-col items-center opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
               {/* Elegant Subtitle */}
               <div className="flex items-center justify-center gap-3">
-                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-amber-600" />
-                <span className="font-poppins text-sm tracking-widest text-amber-600 uppercase font-medium">
+                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+                <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
                   Chef's Selection
                 </span>
-                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-amber-600" />
+                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
               </div>
 
               {/* Main Heading with floating animation */}
@@ -128,7 +134,7 @@ const Dining: React.FC = () => {
                   className="text-h2 font-playfair text-foreground text-center relative animate-float"
                 >
                   Today's Specials
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-amber-600 to-transparent" />
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent" />
                 </h2>
               </div>
 
@@ -162,8 +168,8 @@ const Dining: React.FC = () => {
                   className="opacity-0 animate-[fadeInUp_0.8s_ease-out_forwards]"
                   style={{ animationDelay: `${0.8 + index * 0.2}s` }}
                 >
-                                  <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 border border-gray-200/20 rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-300 backdrop-blur-sm hover:scale-105 h-[500px] w-full">
-                  <div className="w-56 h-56 rounded-full overflow-hidden -mt-16 border-4 border-amber-600/20 shadow-golden-glow flex-shrink-0">
+                                  <div className="bg-gradient-to-br from-background to-background-secondary border border-soft rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-300 backdrop-blur-sm hover:scale-105 h-[500px] w-full">
+                  <div className="w-56 h-56 rounded-full overflow-hidden -mt-16 border-4 border-accent/20 shadow-golden-glow flex-shrink-0">
                     <LazyImage 
                       src={special.image} 
                       alt={special.name} 
@@ -197,17 +203,17 @@ const Dining: React.FC = () => {
       </section>
 
       {/* Featured Dishes Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <div className="space-y-8 flex flex-col items-center opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
               {/* Elegant Subtitle */}
               <div className="flex items-center justify-center gap-3">
-                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-amber-600" />
-                <span className="font-poppins text-sm tracking-widest text-amber-600 uppercase font-medium">
+                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+                <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
                   Menu Highlights
                 </span>
-                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-amber-600" />
+                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
               </div>
 
               {/* Main Heading with floating animation */}
@@ -216,7 +222,7 @@ const Dining: React.FC = () => {
                   className="text-h2 font-playfair text-foreground text-center relative animate-float"
                 >
                   Featured Dishes
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-amber-600 to-transparent" />
+                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent" />
                 </h2>
               </div>
 
@@ -234,8 +240,8 @@ const Dining: React.FC = () => {
                 className="opacity-0 animate-[fadeInUp_0.8s_ease-out_forwards]"
                 style={{ animationDelay: `${0.8 + index * 0.2}s` }}
               >
-                <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 border border-gray-200/20 rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-300 backdrop-blur-sm hover:scale-105 h-[500px] w-full">
-                  <div className="w-56 h-56 rounded-full overflow-hidden -mt-16 border-4 border-amber-600/20 shadow-golden-glow flex-shrink-0">
+                <div className="bg-gradient-to-br from-background to-background-secondary border border-soft rounded-2xl shadow-soft-sunlight-lg hover:shadow-golden-glow p-6 lg:p-8 flex flex-col items-center text-center transition-all duration-300 backdrop-blur-sm hover:scale-105 h-[500px] w-full">
+                  <div className="w-56 h-56 rounded-full overflow-hidden -mt-16 border-4 border-accent/20 shadow-golden-glow flex-shrink-0">
                     <LazyImage 
                       src="/images/Dining/menu/default-dish.jpg"
                       alt={dish.name} 
@@ -270,16 +276,16 @@ const Dining: React.FC = () => {
       </section>
 
       {/* Menu Introduction Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-background-secondary">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="space-y-8 flex flex-col items-center opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
             {/* Elegant Subtitle */}
             <div className="flex items-center justify-center gap-3">
-              <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-amber-600" />
-              <span className="font-poppins text-sm tracking-widest text-amber-600 uppercase font-medium">
+              <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+              <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
                 Culinary Heritage
               </span>
-              <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-amber-600" />
+              <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
             </div>
 
             {/* Main Heading with floating animation */}
@@ -288,7 +294,7 @@ const Dining: React.FC = () => {
                 className="text-h2 font-playfair text-foreground text-center relative animate-float"
               >
                 Our Menu
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-amber-600 to-transparent" />
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent" />
               </h2>
             </div>
 
@@ -314,138 +320,206 @@ const Dining: React.FC = () => {
 
       {/* Expandable Menu Section */}
       {isMenuExpanded && (
-        <section className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex gap-8">
-              {/* Sidebar Navigation */}
-              <div className="w-80 flex-shrink-0">
-                <div className="sticky top-8">
-                  <div className="space-y-4 mb-8">
-                    {/* Elegant Subtitle */}
-                    <div className="flex items-center justify-center gap-3">
-                      <div className="w-6 h-0.5 bg-gradient-to-r from-transparent to-amber-600" />
-                      <span className="font-poppins text-xs tracking-widest text-amber-600 uppercase font-medium">
-                        Menu Navigation
-                      </span>
-                      <div className="w-6 h-0.5 bg-gradient-to-l from-transparent to-amber-600" />
-                    </div>
-
-                    {/* Main Heading */}
-                    <h3 className="text-h3 font-playfair text-foreground text-center relative animate-float">
-                      Menu Collections
-                      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-amber-600 to-transparent" />
-                    </h3>
-                  </div>
-                  <div className="space-y-2">
-                    {menuData.map((collection) => (
-                      <div key={collection.collection} className="mb-4">
-                        <button
-                          onClick={() => handleCollectionSelect(collection.collection)}
-                          className={`w-full text-left p-4 rounded-xl transition-all duration-200 border-2 ${
-                            selectedCollection === collection.collection
-                              ? 'bg-amber-600 text-white border-amber-800'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'
+        <section className="py-20 bg-background-secondary relative overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23A57156' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3Ccircle cx='10' cy='10' r='0.5'/%3E%3Ccircle cx='50' cy='10' r='0.5'/%3E%3Ccircle cx='10' cy='50' r='0.5'/%3E%3Ccircle cx='50' cy='50' r='0.5'/%3E%3Ccircle cx='30' cy='10' r='0.5'/%3E%3Ccircle cx='30' cy='50' r='0.5'/%3E%3Ccircle cx='10' cy='30' r='0.5'/%3E%3Ccircle cx='50' cy='30' r='0.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: '60px 60px'
+            }} />
+          </div>
+          
+          <div className="max-w-7xl mx-auto px-4 relative z-10">
+            <div className="glassmorphic rounded-3xl border border-soft shadow-soft-sunlight-lg p-8 relative overflow-hidden">
+              {/* Inner Pattern Overlay */}
+              <div className="absolute inset-0 opacity-10 rounded-3xl" style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A57156' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundSize: '40px 40px'
+              }} />
+              
+              <div className="flex gap-8 relative z-10 h-[800px]">
+                {/* Sidebar Navigation - Fixed */}
+                <div className="w-96 flex-shrink-0">
+                  <div className="space-y-4">
+                      {menuData.map((collection, collectionIndex) => (
+                        <div 
+                          key={collection.collection} 
+                          className={`card-interactive border border-interactive shadow-heritage hover-lift ${
+                            collectionIndex % 2 === 0 ? 'hover-glow' : 'hover-bounce'
                           }`}
+                          style={{
+                            animationDelay: `${collectionIndex * 0.1}s`
+                          }}
                         >
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{collection.icon}</span>
-                            <div>
-                              <div className="font-bold">{collection.collection}</div>
-                              <div className="text-sm opacity-75">{collection.description}</div>
-                            </div>
-                          </div>
-                        </button>
-                        
-                        {selectedCollection === collection.collection && (
-                          <div className="mt-2 ml-4 space-y-1">
-                            {collection.categories.map((category) => (
-                              <button
-                                key={category.category}
-                                onClick={() => handleCategorySelect(category.category)}
-                                className={`w-full text-left p-3 rounded-lg transition-all duration-200 border-2 ${
-                                  selectedCategory === category.category
-                                    ? 'bg-amber-100 text-amber-800 border-amber-600'
-                                    : 'text-gray-600 hover:bg-gray-50 border-gray-200'
-                                }`}
-                              >
-                                {category.category}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Menu Content */}
-              <div className="flex-1">
-                {currentCategory && (
-                  <div>
-                    <div className="mb-8">
-                      <div className="space-y-4 mb-8">
-                        {/* Elegant Subtitle */}
-                        <div className="flex items-center justify-center gap-3">
-                          <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-amber-600" />
-                          <span className="font-poppins text-sm tracking-widest text-amber-600 uppercase font-medium">
-                            {currentCollection?.collection}
-                          </span>
-                          <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-amber-600" />
-                        </div>
-
-                        {/* Main Heading */}
-                        <h2 className="text-h2 font-playfair text-foreground text-center relative animate-float">
-                          {currentCategory.category}
-                          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-amber-600 to-transparent" />
-                        </h2>
-                      </div>
-                      <div className="h-80 rounded-2xl overflow-hidden">
-                        <LazyImage
-                          src={currentCategory.image}
-                          alt={currentCategory.category}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {currentCategory.items.map((item, index) => (
-                        <div key={index} className="bg-white rounded-2xl p-6 border-2 border-gray-800 hover:shadow-lg transition-shadow duration-300">
-                          <div className="flex justify-between items-start mb-3">
-                            <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
-                            <span className="text-2xl font-bold text-amber-600 ml-4">
-                              {typeof item.price === 'string' ? item.price : `₹${item.price}`}
-                            </span>
-                          </div>
-                          
-                          {item.description && (
-                            <p className="text-gray-600 mb-4 leading-relaxed">
-                              {item.description}
-                            </p>
-                          )}
-                          
-                          {item.variants && (
-                            <div className="space-y-2">
-                              {item.variants.map((variant, variantIndex) => (
-                                <div key={variantIndex} className="flex justify-between items-center text-sm">
-                                  <span className="text-gray-700">{variant.name}</span>
-                                  <span className="font-semibold text-amber-600">₹{variant.price}</span>
+                          {/* Collection Card */}
+                          <div className="p-6">
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <div className="font-cinzel font-bold text-text-heading text-lg mb-2 tracking-wide">
+                                  {collection.collection}
                                 </div>
-                              ))}
+                                <div className="font-cormorant text-text-subtle text-base leading-relaxed">
+                                  {collection.description}
+                                </div>
+                              </div>
+                              <button
+                                onClick={() => handleCollectionSelect(collection.collection)}
+                                className="btn btn-ghost p-3 rounded-full border border-interactive bg-background-secondary hover:bg-background-tertiary transition-all duration-300 hover:shadow-golden-glow-sm"
+                              >
+                                <svg 
+                                  className={`w-5 h-5 text-text-subtle transition-all duration-300 ${
+                                    selectedCollection === collection.collection ? 'rotate-180 text-accent' : ''
+                                  }`} 
+                                  fill="none" 
+                                  stroke="currentColor" 
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                          
+                          {/* Categories Dropdown */}
+                          {selectedCollection === collection.collection && (
+                            <div className="px-6 pb-6 animate-slide-down">
+                              <div className="max-h-64 overflow-y-auto hide-scrollbar">
+                                <div className="grid grid-cols-1 gap-3">
+                                  {collection.categories.map((category, categoryIndex) => (
+                                    <button
+                                      key={category.category}
+                                      onClick={() => handleCategorySelect(category.category)}
+                                      className={`w-full text-left p-4 rounded-xl border text-base font-poppins font-semibold transition-all duration-300 hover-bounce ${
+                                        selectedCategory === category.category
+                                          ? 'bg-accent/20 text-accent border-accent/50 shadow-golden-glow-sm text-glow-gold'
+                                          : 'bg-background-secondary text-foreground border-border hover:bg-background-tertiary hover:border-interactive hover:shadow-soft-sunlight'
+                                      }`}
+                                      style={{
+                                        animationDelay: `${categoryIndex * 0.05}s`
+                                      }}
+                                    >
+                                      {category.category}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
                             </div>
                           )}
-                          
-                          <div className="mt-4 flex justify-end">
-                            <Button className="bg-transparent hover:bg-green-800 text-gray-900 hover:text-white px-3 py-1 rounded-lg border-2 border-gray-800 hover:border-green-800 font-semibold text-sm transition-colors duration-300">
-                              Add to Table
-                            </Button>
-                          </div>
                         </div>
                       ))}
-                    </div>
                   </div>
-                )}
+                </div>
+
+                {/* Menu Content - Scrollable */}
+                <div className="flex-1 overflow-y-auto hide-scrollbar">
+                  {currentCategory && (
+                    <div className="animate-fade-in-up">
+                      <div className="mb-12">
+                        <div className="space-y-6 mb-8">
+                          {/* Elegant Subtitle */}
+                          <div className="flex items-center justify-center gap-4">
+                            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent animate-gradient-flow" />
+                            <span className="font-poppins text-sm tracking-widest text-accent uppercase font-semibold text-glow-gold">
+                              {currentCollection?.collection}
+                            </span>
+                            <div className="w-16 h-0.5 bg-gradient-to-l from-transparent via-accent to-transparent animate-gradient-flow" />
+                          </div>
+
+                          {/* Main Heading */}
+                          <h2 className="text-h2 font-playfair text-text-heading text-center relative animate-float text-glow-primary">
+                            {currentCategory.category}
+                            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent animate-gradient-flow" />
+                          </h2>
+                        </div>
+                        <div className="h-96 rounded-3xl overflow-hidden shadow-heritage-lg img-overlay hover-glow">
+                          <LazyImage
+                            src={currentCategory.image}
+                            alt={currentCategory.category}
+                            className="w-full h-full object-cover transition-all duration-700"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {currentCategory.items.map((item, index) => {
+                          // If item has variants, create separate items for each variant
+                          if (item.variants && item.variants.length > 0) {
+                            return item.variants.map((variant, variantIndex) => (
+                              <div 
+                                key={`${index}-${variantIndex}`} 
+                                className={`card-tilt hover-lift ${
+                                  (index + variantIndex) % 3 === 0 ? 'hover-glow' : 
+                                  (index + variantIndex) % 3 === 1 ? 'hover-bounce' : 'hover-pulse'
+                                }`}
+                                style={{
+                                  animationDelay: `${(index + variantIndex) * 0.1}s`
+                                }}
+                              >
+                                <div className="p-5">
+                                  <div className="flex justify-between items-start mb-3">
+                                    <h3 className="text-lg font-playfair font-bold text-text-heading tracking-wide">
+                                      {item.name} - {variant.name}
+                                    </h3>
+                                    <span className="font-poppins font-semibold text-accent text-xl ml-4 text-glow-gold">
+                                      ₹{variant.price}
+                                    </span>
+                                  </div>
+                                  
+                                  {item.description && (
+                                    <p className="text-text-subtle mb-4 leading-relaxed font-cormorant text-sm">
+                                      {item.description}
+                                    </p>
+                                  )}
+                                  
+                                  <div className="flex justify-end">
+                                    <Button className="btn btn-primary text-xs px-4 py-2 shadow-heritage hover:shadow-golden-glow transition-all duration-300 hover:scale-105">
+                                      Add to Table
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            ));
+                          } else {
+                            // Regular item without variants
+                            return (
+                              <div 
+                                key={index} 
+                                className={`card-tilt hover-lift ${
+                                  index % 3 === 0 ? 'hover-glow' : 
+                                  index % 3 === 1 ? 'hover-bounce' : 'hover-pulse'
+                                }`}
+                                style={{
+                                  animationDelay: `${index * 0.1}s`
+                                }}
+                              >
+                                <div className="p-5">
+                                  <div className="flex justify-between items-start mb-3">
+                                    <h3 className="text-lg font-playfair font-bold text-text-heading tracking-wide">{item.name}</h3>
+                                    <span className="font-poppins font-semibold text-accent text-xl ml-4 text-glow-gold">
+                                      {typeof item.price === 'string' ? item.price : `₹${item.price}`}
+                                    </span>
+                                  </div>
+                                  
+                                  {item.description && (
+                                    <p className="text-text-subtle mb-4 leading-relaxed font-cormorant text-sm">
+                                      {item.description}
+                                    </p>
+                                  )}
+                                  
+                                  <div className="flex justify-end">
+                                    <Button className="btn btn-primary text-xs px-4 py-2 shadow-heritage hover:shadow-golden-glow transition-all duration-300 hover:scale-105">
+                                      Add to Table
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          }
+                        }).flat()}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -453,11 +527,26 @@ const Dining: React.FC = () => {
       )}
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-background-secondary">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-gray-900 mb-4">What Our Guests Say</h2>
-            <p className="text-xl text-gray-600">Experiences that speak for themselves</p>
+            {/* Elegant Subtitle */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent" />
+              <span className="font-poppins text-sm tracking-widest text-accent uppercase font-semibold">
+                Guest Experiences
+              </span>
+              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent via-accent to-transparent" />
+            </div>
+            
+            {/* Main Heading */}
+            <h2 className="text-h1 font-playfair text-text-heading text-center relative mb-4">
+              What Our Guests Say
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent" />
+            </h2>
+            <p className="font-cormorant text-text-subtle text-lg leading-relaxed max-w-2xl mx-auto">
+              Experiences that speak for themselves
+            </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -481,16 +570,36 @@ const Dining: React.FC = () => {
                 rating: 5
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-2xl p-8 border-2 border-gray-800">
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <span key={i} className="text-amber-400 text-xl">★</span>
-                  ))}
-                </div>
-                <p className="text-gray-600 mb-6 leading-relaxed">"{testimonial.text}"</p>
-                <div>
-                  <div className="font-bold text-gray-900">{testimonial.name}</div>
-                  <div className="text-sm text-gray-500">{testimonial.location}</div>
+              <div 
+                key={index} 
+                className="card-base hover-lift"
+              >
+                <div className="p-8">
+                  {/* Star Rating */}
+                  <div className="flex justify-center mb-6">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <span key={i} className="text-accent text-xl">
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* Quote */}
+                  <div className="relative mb-6">
+                    <p className="font-cormorant text-text-subtle leading-relaxed text-base text-center italic">
+                      "{testimonial.text}"
+                    </p>
+                  </div>
+                  
+                  {/* Author Info */}
+                  <div className="border-t border-border pt-4 text-center">
+                    <div className="font-cinzel font-bold text-text-heading text-lg mb-1">
+                      {testimonial.name}
+                    </div>
+                    <div className="font-poppins text-text-subtle text-sm">
+                      {testimonial.location}
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -499,20 +608,20 @@ const Dining: React.FC = () => {
       </section>
 
       {/* Recipe Video Sections */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           {/* First Video Section - Video on Right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
             <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-gray-900">Traditional Kerala Fish Curry</h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <h2 className="text-4xl font-bold text-foreground">Traditional Kerala Fish Curry</h2>
+              <p className="text-lg text-foreground-subtle leading-relaxed">
                 Watch our master chef prepare the authentic Kerala fish curry using traditional 
                 methods passed down through generations. Learn the secrets of perfect spice 
                 balance and coconut milk preparation.
               </p>
               <div className="flex items-center gap-4">
-                <span className="text-2xl font-bold text-amber-600">₹600</span>
-                <Button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 border-2 border-amber-800">
+                <span className="text-2xl font-bold text-accent">₹600</span>
+                <Button className="btn btn-primary px-6 py-3">
                   Order Now
                 </Button>
               </div>
@@ -536,15 +645,15 @@ const Dining: React.FC = () => {
               />
             </div>
             <div className="space-y-6 order-1 lg:order-2">
-              <h2 className="text-4xl font-bold text-gray-900">Amritha Heritage Roast Chicken</h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <h2 className="text-4xl font-bold text-foreground">Amritha Heritage Roast Chicken</h2>
+              <p className="text-lg text-foreground-subtle leading-relaxed">
                 Discover the secret behind our signature roast chicken, prepared with 
                 a blend of aromatic spices and slow-cooked to perfection. A dish that 
                 has been our pride for decades.
               </p>
               <div className="flex items-center gap-4">
-                <span className="text-2xl font-bold text-amber-600">₹450</span>
-                <Button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 border-2 border-amber-800">
+                <span className="text-2xl font-bold text-accent">₹450</span>
+                <Button className="btn btn-primary px-6 py-3">
                   Order Now
                 </Button>
               </div>
@@ -554,15 +663,15 @@ const Dining: React.FC = () => {
           {/* Third Video Section - Video on Right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-gray-900">Kohinoor Special Prawns Biryani</h2>
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <h2 className="text-4xl font-bold text-foreground">Kohinoor Special Prawns Biryani</h2>
+              <p className="text-lg text-foreground-subtle leading-relaxed">
                 Experience the art of biryani making with our special prawns biryani. 
                 Watch as layers of fragrant rice and succulent prawns come together 
                 in perfect harmony.
               </p>
               <div className="flex items-center gap-4">
-                <span className="text-2xl font-bold text-amber-600">₹650</span>
-                <Button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 border-2 border-amber-800">
+                <span className="text-2xl font-bold text-accent">₹650</span>
+                <Button className="btn btn-primary px-6 py-3">
                   Order Now
                 </Button>
               </div>
@@ -579,11 +688,11 @@ const Dining: React.FC = () => {
       </section>
 
       {/* Special Occasions Section */}
-      <section className="py-20 bg-gray-900 text-white">
+      <section className="py-20 bg-primary text-foreground-on-color">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold mb-4">Special Occasions</h2>
-            <p className="text-xl text-gray-300">Create unforgettable memories with our exclusive dining experiences</p>
+            <p className="text-xl text-foreground-on-color/80">Create unforgettable memories with our exclusive dining experiences</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -607,7 +716,7 @@ const Dining: React.FC = () => {
                 price: "From ₹3,500 per person"
               }
             ].map((occasion, index) => (
-              <div key={index} className="bg-gray-800 rounded-2xl overflow-hidden border-2 border-gray-600 hover:border-amber-400 transition-colors duration-300">
+              <div key={index} className="bg-background-tertiary rounded-2xl overflow-hidden border-2 border-border hover:border-accent transition-colors duration-300">
                 <div className="h-64 relative">
                   <LazyImage
                     src={occasion.image}
@@ -617,11 +726,11 @@ const Dining: React.FC = () => {
                   <div className="absolute inset-0 bg-black/20" />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold mb-3">{occasion.title}</h3>
-                  <p className="text-gray-300 mb-4 leading-relaxed">{occasion.description}</p>
+                  <h3 className="text-2xl font-bold mb-3 text-foreground-on-color">{occasion.title}</h3>
+                  <p className="text-foreground-on-color/80 mb-4 leading-relaxed">{occasion.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-amber-400 font-semibold">{occasion.price}</span>
-                    <Button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 border-2 border-amber-800">
+                    <span className="text-accent font-semibold">{occasion.price}</span>
+                    <Button className="btn btn-primary px-6 py-2">
                       Book Now
                     </Button>
                   </div>

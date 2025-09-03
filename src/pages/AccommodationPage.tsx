@@ -19,7 +19,7 @@ const roomTypes: RoomType[] = [
     id: 'heritage-premium',
     name: 'Heritage Premium Room',
     description: 'Spacious, garden-facing, with sit-out areas',
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop',
+    image: '/images/Accommodation/room (1).webp',
     price: '₹8,500',
     capacity: 2,
     size: '450 sq ft',
@@ -30,7 +30,7 @@ const roomTypes: RoomType[] = [
     id: 'deluxe',
     name: 'Deluxe Room',
     description: 'Comfortable elegance with classic wooden decor',
-    image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop',
+    image: '/images/Accommodation/room (2).webp',
     price: '₹6,500',
     capacity: 2,
     size: '380 sq ft',
@@ -41,7 +41,7 @@ const roomTypes: RoomType[] = [
     id: 'executive',
     name: 'Executive Room',
     description: 'Extra space and style, perfect for long stays',
-    image: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop',
+    image: '/images/Accommodation/room (3).webp',
     price: '₹10,500',
     capacity: 3,
     size: '550 sq ft',
@@ -52,7 +52,7 @@ const roomTypes: RoomType[] = [
     id: 'accessible',
     name: 'Differently-Abled Room',
     description: 'Fully accessible, spacious, and dignified',
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop',
+    image: '/images/Accommodation/room (4).webp',
     price: '₹7,500',
     capacity: 2,
     size: '500 sq ft',
@@ -79,12 +79,12 @@ const AccommodationPage: React.FC = () => {
     <>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="relative h-[70vh] overflow-hidden flex items-center justify-center">
-          {/* Background Image */}
+        <section className="relative h-[90vh] overflow-hidden flex items-center justify-center">
+          {/* Background Image from local Accommodation assets */}
           <div 
             className="absolute inset-0 w-full h-full"
             style={{
-              backgroundImage: 'url(https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1920&h=1080&fit=crop)',
+              backgroundImage: "url('/images/Accommodation/room (1).webp')",
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundAttachment: 'fixed'
@@ -92,51 +92,65 @@ const AccommodationPage: React.FC = () => {
           />
           
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/40" />
           
-          {/* Content */}
-          <div className="relative z-10 text-center text-white px-6">
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="font-playfair text-6xl md:text-7xl lg:text-8xl mb-6"
+          {/* Content styled like Home Hero */}
+          <div className="relative z-10 text-center text-foreground-on-color px-6 animate-fadeInUp">
+            <p 
+              className="font-poppins text-xs tracking-widest text-accent-gold uppercase mb-4 font-medium opacity-0 animate-[fadeInUp_0.8s_ease-out_0.1s_forwards]"
             >
-              Accommodation
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-cormorant text-xl md:text-2xl mb-8 max-w-3xl mx-auto"
+              Amritha Heritage
+            </p>
+
+            <div className="opacity-0 animate-[fadeInUp_0.8s_ease-out_0.3s_forwards]">
+              <h1 
+                className="font-cinzel text-5xl md:text-6xl lg:text-7xl mb-6 leading-tight text-foreground-on-color animate-float"
+              >
+                Accommodation<br />
+                <span className="italic bg-gradient-to-r from-accent-gold to-accent bg-clip-text text-transparent">
+                  Rooms & Suites
+                </span>
+              </h1>
+            </div>
+
+            <p 
+              className="font-cormorant text-lg md:text-xl mb-8 max-w-3xl mx-auto text-foreground-on-color/90 leading-relaxed opacity-0 animate-[fadeInUp_0.8s_ease-out_0.5s_forwards]"
             >
-              Experience luxury and comfort in our heritage rooms, where every detail tells a story
-            </motion.p>
-            <motion.button
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="bg-action-accent hover:bg-action-accent-hover text-white font-poppins font-semibold px-8 py-4 rounded-xl text-lg transition-all duration-300 transform hover:scale-105"
+              Experience the timeless elegance of our heritage rooms, thoughtfully designed with period charm and modern comfort.
+            </p>
+
+            <button 
+              className="btn btn-primary text-lg px-8 py-4 shadow-golden-glow hover:shadow-golden-glow-sm transition-all duration-300 hover:scale-105 active:scale-95 opacity-0 animate-[fadeInUp_0.8s_ease-out_0.7s_forwards]"
             >
               View Our Rooms
-            </motion.button>
+            </button>
           </div>
         </section>
 
         {/* Intro Section */}
-        <section className="py-24 bg-background-secondary">
+        <section className="hidden py-24 bg-background-secondary">
           <div className="container mx-auto px-6 lg:px-8">
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center max-w-4xl mx-auto"
+              className="text-center max-w-4xl mx-auto space-y-6"
             >
-              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-6">
+              {/* Subtitle */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+                <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
+                  Heritage Experience
+                </span>
+                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
+              </div>
+
+              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-2 relative animate-float">
                 Stay in Colonial Elegance
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent" />
               </h2>
-              <p className="font-cormorant text-xl text-text-subtle leading-relaxed">
+              <p className="font-cormorant text-xl text-foreground-subtle leading-relaxed">
                 Our rooms are more than just places to sleep — they are a journey into history. 
                 Each room is uniquely designed with period furniture, natural lighting, and modern amenities.
               </p>
@@ -152,17 +166,27 @@ const AccommodationPage: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-16 space-y-6"
             >
-              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-4">
-                Room Types
+              {/* Subtitle */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+                <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
+                  Heritage Experience
+                </span>
+                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
+              </div>
+
+              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-2 relative animate-float">
+                Stay in Colonial Elegance
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent" />
               </h2>
-              <p className="font-cormorant text-xl text-text-subtle max-w-2xl mx-auto">
-                Choose from our carefully curated selection of rooms, each offering a unique blend of heritage and comfort
+              <p className="font-cormorant text-xl text-foreground-subtle max-w-2xl mx-auto">
+                Our rooms are more than just places to sleep — they are a journey into history. Each room is uniquely designed with period furniture, natural lighting, and modern amenities.
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {roomTypes.map((room, index) => (
                 <motion.div
                   key={room.id}
@@ -170,10 +194,10 @@ const AccommodationPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-background-tertiary rounded-2xl overflow-hidden shadow-heritage-lg border border-border-soft hover:shadow-heritage-xl transition-all duration-300 transform hover:-translate-y-2"
+                  className="card-base border border-border hover-lift hover-glow"
                 >
                   {/* Room Image */}
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-80 md:h-96 overflow-hidden rounded-t-2xl img-overlay">
                     <img 
                       src={room.image} 
                       alt={room.name}
@@ -182,9 +206,9 @@ const AccommodationPage: React.FC = () => {
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                         const placeholder = document.createElement('div');
-                        placeholder.className = 'w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center';
+                        placeholder.className = 'w-full h-full bg-background-secondary flex items-center justify-center';
                         placeholder.innerHTML = `
-                          <div class="text-center text-gray-500">
+                          <div class="text-center text-foreground-subtle">
                             <svg class="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
                               <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
                             </svg>
@@ -194,7 +218,7 @@ const AccommodationPage: React.FC = () => {
                         target.parentNode?.appendChild(placeholder);
                       }}
                     />
-                    <div className="absolute top-4 right-4 bg-action-accent text-white px-3 py-1 rounded-full text-sm font-poppins font-semibold">
+                    <div className="absolute top-4 right-4 bg-accent text-foreground-on-color px-3 py-1 rounded-full text-sm font-poppins font-semibold shadow-golden-glow-sm">
                       {room.price}
                     </div>
                   </div>
@@ -204,44 +228,39 @@ const AccommodationPage: React.FC = () => {
                     <h3 className="font-playfair text-2xl text-text-heading mb-3">
                       {room.name}
                     </h3>
-                    <p className="font-cormorant text-text-subtle mb-4 leading-relaxed">
+                    <p className="font-cormorant text-foreground-subtle mb-4 leading-relaxed">
                       {room.description}
                     </p>
                     
                     {/* Room Specs */}
-                    <div className="flex items-center gap-4 mb-4 text-sm text-text-subtle">
-                      <div className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
+                    <div className="flex items-center gap-6 mb-6 text-sm text-foreground-subtle">
+                      <div className="flex items-center gap-2">
+                        <Users className="w-5 h-5" />
                         <span>{room.capacity}</span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4" />
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-5 h-5" />
                         <span>{room.size}</span>
                       </div>
                     </div>
 
-                    {/* Key Features */}
-                    <div className="mb-6">
-                      <div className="flex flex-wrap gap-2">
-                        {room.features.slice(0, 2).map((feature, idx) => (
-                          <span 
-                            key={idx}
-                            className="bg-background-secondary text-text-subtle text-xs px-2 py-1 rounded-full"
-                          >
-                            {feature}
-                          </span>
-                        ))}
-                      </div>
+                    {/* Actions */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        onClick={() => handleViewDetails(room)}
+                        className="w-full btn btn-primary flex items-center justify-center gap-2"
+                      >
+                        View Details
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => window.open(room.image, '_blank')}
+                        className="w-full btn btn-secondary flex items-center justify-center gap-2"
+                        title="Open 360° view"
+                      >
+                        View 360°
+                      </button>
                     </div>
-
-                    {/* View Details Button */}
-                    <button
-                      onClick={() => handleViewDetails(room)}
-                      className="w-full bg-action-accent hover:bg-action-accent-hover text-white font-poppins font-semibold py-3 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
-                    >
-                      View Details
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
                   </div>
                 </motion.div>
               ))}
@@ -257,12 +276,22 @@ const AccommodationPage: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-16 space-y-6"
             >
-              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-4">
+              {/* Subtitle */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+                <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
+                  Guest Voices
+                </span>
+                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
+              </div>
+
+              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-2 relative animate-float">
                 What Our Guests Say
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent" />
               </h2>
-              <p className="font-cormorant text-xl text-text-subtle max-w-2xl mx-auto">
+              <p className="font-cormorant text-xl text-foreground-subtle max-w-2xl mx-auto">
                 Discover why travelers choose Amritha for their heritage experience
               </p>
             </motion.div>
@@ -294,19 +323,19 @@ const AccommodationPage: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-background-tertiary rounded-2xl p-8 border border-border-soft hover:shadow-heritage-lg transition-all duration-300"
+                  className="bg-background rounded-2xl p-8 border border-border hover:shadow-soft-sunlight transition-all duration-300"
                 >
                   <div className="flex items-center gap-2 mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="w-5 h-5 text-accent" />
                     ))}
                   </div>
-                  <p className="font-cormorant text-text-subtle italic mb-6 leading-relaxed">
+                  <p className="font-cormorant text-foreground-subtle italic mb-6 leading-relaxed">
                     "{testimonial.text}"
                   </p>
                   <div>
                     <p className="font-poppins font-semibold text-text-heading">{testimonial.name}</p>
-                    <p className="font-cormorant text-sm text-text-subtle">{testimonial.room}</p>
+                    <p className="font-cormorant text-sm text-foreground-subtle">{testimonial.room}</p>
                   </div>
                 </motion.div>
               ))}
@@ -316,73 +345,61 @@ const AccommodationPage: React.FC = () => {
 
         {/* Gallery Section */}
         <section className="py-24 bg-background">
-          <div className="container mx-auto px-6 lg:px-8">
+          <div className="container mx-auto px-2 md:px-4 lg:px-6">
             <motion.div 
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-8 md:mb-12 space-y-6"
             >
-              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-4">
+              {/* Subtitle */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+                <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
+                  Visual Journey
+                </span>
+                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
+              </div>
+
+              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-2 relative animate-float">
                 Accommodation Gallery
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent" />
               </h2>
-              <p className="font-cormorant text-xl text-text-subtle max-w-2xl mx-auto">
+              <p className="font-cormorant text-xl text-foreground-subtle max-w-2xl mx-auto">
                 Take a visual journey through our heritage rooms and discover the elegance that awaits you
               </p>
             </motion.div>
 
-            {/* Bent Grid Gallery */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Uniform, full-screen-feel grid similar to Gallery page */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {[
-                'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop',
-                'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=600&fit=crop',
-                'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&h=400&fit=crop',
-                'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=600&fit=crop',
-                'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=400&fit=crop',
-                'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&h=600&fit=crop',
-                'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop',
-                'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=400&fit=crop'
+                '/images/Accommodation/room (1).webp',
+                '/images/Accommodation/room (2).webp',
+                '/images/Accommodation/room (3).webp',
+                '/images/Accommodation/room (4).webp',
+                '/images/Accommodation/room (5).webp',
+                '/images/Accommodation/room (6).webp',
+                '/images/Accommodation/room (7).webp',
+                '/images/Accommodation/room (8).webp',
+                '/images/Accommodation/room (9).webp',
+                '/images/Accommodation/room (10).webp',
               ].map((image, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className={`relative overflow-hidden rounded-2xl group cursor-pointer ${
-                    index === 1 || index === 3 || index === 5 ? 'md:row-span-2' : ''
-                  }`}
+                <div 
+                  key={index} 
+                  className="relative overflow-hidden cursor-pointer rounded-lg border border-border-soft animate-fade-in-up h-[90vh]"
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <img 
                     src={image} 
                     alt={`Accommodation ${index + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      const placeholder = document.createElement('div');
-                      placeholder.className = 'w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center';
-                      placeholder.innerHTML = `
-                        <div class="text-center text-gray-500">
-                          <svg class="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
-                          </svg>
-                          <p class="text-sm font-medium">Gallery Image</p>
-                        </div>
-                      `;
-                      target.parentNode?.appendChild(placeholder);
-                    }}
+                    className="w-full h-full object-cover rounded-lg"
+                    onError={(e) => { (e.target as HTMLImageElement).src = '/images/Accommodation/room (1).webp'; }}
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-center">
-                      <svg className="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                      </svg>
-                      <p className="font-poppins font-medium">View</p>
-                    </div>
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                    <p className="text-foreground-on-color font-playfair text-xl">Room {index + 1}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -396,19 +413,29 @@ const AccommodationPage: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="max-w-3xl mx-auto"
+              className="max-w-3xl mx-auto space-y-6"
             >
-              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-6">
+              {/* Subtitle */}
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-accent" />
+                <span className="font-poppins text-sm tracking-widest text-accent uppercase font-medium">
+                  Plan Your Stay
+                </span>
+                <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-accent" />
+              </div>
+
+              <h2 className="font-playfair text-4xl md:text-5xl text-text-heading mb-2 relative animate-float">
                 Ready to Experience Heritage?
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent" />
               </h2>
-              <p className="font-cormorant text-xl text-text-subtle mb-8 leading-relaxed">
+              <p className="font-cormorant text-xl text-foreground-subtle mb-8 leading-relaxed">
                 Book your stay and immerse yourself in the colonial elegance of Amritha. 
                 Our team is ready to make your experience unforgettable.
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-action-accent hover:bg-action-accent-hover text-white font-poppins font-semibold px-10 py-4 rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="btn btn-primary px-10 py-4 text-lg shadow-soft-sunlight hover:shadow-golden-glow"
               >
                 Book Your Stay
               </motion.button>
@@ -592,23 +619,19 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({ room, onClose }) =>
                 </div>
               </div>
 
-                             {/* Room Video */}
-               <div>
-                 <h3 className="font-playfair text-2xl text-text-heading mb-4">Room Tour</h3>
-                 <div className="bg-background-secondary rounded-2xl p-6">
-                   <div className="aspect-video bg-black rounded-xl overflow-hidden">
-                     <div className="w-full h-full flex items-center justify-center">
-                       <div className="text-center text-white">
-                         <svg className="w-20 h-20 mx-auto mb-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                         </svg>
-                         <p className="text-lg font-medium">Room Tour Video</p>
-                         <p className="text-sm text-gray-400">Experience the room in motion</p>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
+              {/* 360 View Placeholder */}
+              <div>
+                <h3 className="font-playfair text-2xl text-text-heading mb-4">360° Room View</h3>
+                <div className="bg-background-secondary rounded-2xl p-6 border border-border-soft text-center">
+                  <p className="font-cormorant text-foreground-subtle mb-4">Interactive 360° view coming soon.</p>
+                  <button
+                    onClick={() => window.open(room.image, '_blank')}
+                    className="btn btn-secondary"
+                  >
+                    Open 360° Image
+                  </button>
+                </div>
+              </div>
 
                {/* Testimonials */}
                <div>
@@ -648,7 +671,7 @@ const RoomDetailsModal: React.FC<RoomDetailsModalProps> = ({ room, onClose }) =>
                   </div>
                 </div>
 
-                <button className="w-full bg-action-accent hover:bg-action-accent-hover text-white font-poppins font-semibold py-4 rounded-xl transition-all duration-300 transform hover:scale-105">
+                <button className="w-full btn btn-primary py-4">
                   Book Now
                 </button>
               </div>
